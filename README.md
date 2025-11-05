@@ -9,10 +9,8 @@ mvn clean install spring-boot:run
 ```
 http://localhost:8080/api/executetask
 ```
-#### Response 200 & Message Below:
-```
-Executed Camunda BPMN
-```
+<img width="1526" height="120" alt="image" src="https://github.com/user-attachments/assets/573406fa-29f2-4a58-9df6-38c45e2cee40" />
+
 
 ### Sample API queries 
  - If Match, Return list of rules returned with HTTP Status 200 
@@ -31,8 +29,10 @@ http://localhost:8080/api/test
 #### No Matches (see application yml)
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=IE&appVersion=1&tier=2
-[]
 ```
+
+<img width="761" height="163" alt="image" src="https://github.com/user-attachments/assets/490bd7d3-71e8-4281-b04e-efa4c79add37" />
+
 
 #### 2 Matches for feature, country, & app version rules (see application yml - tier not checked yet)
 ```
