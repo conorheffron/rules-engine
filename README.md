@@ -39,6 +39,9 @@ http://localhost:8080/api/eval?feature=new-checkout&country=IE&appVersion=1&tier
 http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=120&tier=2
 ```
 
+<img width="810" height="416" alt="image" src="https://github.com/user-attachments/assets/972445c2-be54-4499-a38c-1413fcae5831" />
+
+
 #### 2 Matches for feature, country, & app version rules (see application yml - tier not checked yet)
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=400&tier=2
@@ -48,3 +51,5 @@ http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=400&ti
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=100&tier=2
 ```
+
+
