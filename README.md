@@ -52,4 +52,7 @@ http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=400&ti
 http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=100&tier=2
 ```
 
+<img width="1286" height="286" alt="image" src="https://github.com/user-attachments/assets/cfb0ddd5-efb4-448a-9f12-5177172159ef" />
+
+
 
