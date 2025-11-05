@@ -1,0 +1,37 @@
+feature:
+  new-checkout:
+    enabled: true
+    ruleGroups:
+      all:
+        - { attr: country, op: IN, values: [ "ES", "PT" ] }
+        - { attr: appVersion, op: GTE, values: [ "120" ] }
+      any:
+        - { attr: tier, op: IN, values: [ "gold", "platinum" ] }
+
+  search-v2:
+    enabled: false
+
+  beta-banner:
+    enabled: true
+
+  old-checkout:
+    enabled: true
+    ruleGroups:
+      all:
+        - { attr: country, op: IN, values: [ IRL ] }
+      any:
+        - { attr: tier, op: IN, values: [ gold, platinum ] }
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./camunda-h2-database
+
+camunda.bpm.admin-user:
+  id: demo
+  password: demo
+
+camunda:
+  bpm:
+    generic-properties:
+      properties:
+        historyTimeToLive: 5
