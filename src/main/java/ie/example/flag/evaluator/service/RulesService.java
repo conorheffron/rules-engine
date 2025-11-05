@@ -46,27 +46,6 @@ public class RulesService implements JavaDelegate {
             Feature feature = objectMapper.convertValue(entry.getValue(), Feature.class);
             // store feature
             featuresById.put(featureKey, feature);
-
-            if (feature.getRuleGroups() != null) {
-                Map<String, Map<String, Object>>  featureAllRules = objectMapper
-                        .convertValue(feature.getRuleGroups().getAll(), Map.class);
-                if (featureAllRules != null && !featureAllRules.isEmpty()) {
-                    for (Map<String, Object> ruleMap : featureAllRules.values()) {
-                        Rule rule = objectMapper.convertValue(ruleMap, Rule.class);
-                        LOGGER.info(String.format("----------: Rule info for feature set ALL %s is %s", featureKey, rule.toString()));
-                    }
-                }
-
-                Map<String, Map<String, Object>>  featureAnyRules = objectMapper
-                        .convertValue(feature.getRuleGroups().getAny(), Map.class);
-                if (featureAnyRules != null && !featureAnyRules.isEmpty()) {
-                    for (Map<String, Object> ruleMap : featureAnyRules.values()) {
-                        Rule rule = objectMapper.convertValue(ruleMap, Rule.class);
-                        LOGGER.info("----------: Rule info" + rule.toString());
-                        LOGGER.info(String.format("----------: Rule info for feature set ANY %s is %s", featureKey, rule.toString()));
-                    }
-                }
-            }
         }
 
     }
@@ -89,6 +68,7 @@ public class RulesService implements JavaDelegate {
                 if (rule.getAttr().equalsIgnoreCase("country")) {
                     switch (rule.getOp()) {
                         case "IN":
+                        case "EQ":
                             if (rule.getValues().containsValue(country)) {
                                 ruleMatch.add(rule);// append Rule
                             }
@@ -101,6 +81,7 @@ public class RulesService implements JavaDelegate {
                 if (rule.getAttr().equalsIgnoreCase("appVersion")) {
                     switch (rule.getOp()) {
                         case "GTE":
+                        case "GT":
                             Optional<String> appVersionOptional = rule.getValues().values().stream().findFirst();
                             int vers = Integer.parseInt(appVersionOptional.get());
                             if (Integer.parseInt(appVersion) >= vers) {
