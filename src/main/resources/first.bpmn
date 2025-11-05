@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             id="Definitions_1"
+             targetNamespace="http://example.com/bpmn">
+
+  <process id="rules-init" name="Sample Process" isExecutable="true">
+    <!-- Start Event -->
+    <startEvent id="startEvent" name="Start" />
+
+    <!-- Service Task -->
+    <serviceTask id="serviceTask" name="Service Task Example" camunda:class="ie.example.flag.evaluator.service.RulesService" />
+
+    <!-- End Event -->
+    <endEvent id="endEvent" name="End" />
+
+    <!-- Sequence Flows -->
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="serviceTask" />
+    <sequenceFlow id="flow2" sourceRef="serviceTask" targetRef="endEvent" />
+  </process>
+</definitions>
