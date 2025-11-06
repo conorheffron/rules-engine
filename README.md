@@ -76,7 +76,7 @@ http://localhost:8080/api/eval?feature=search-v2&country=PT&appVersion=140&tier=
 
 ---
 
-## Camunda UI Tools (login with credentials in yml)
+## Camunda UI Tools such as Cockpit, Admin Panel & Tasklist (login with credentials in yml)
 ```
 http://localhost:8080/
 ```
