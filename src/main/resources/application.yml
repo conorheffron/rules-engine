@@ -25,13 +25,28 @@ feature:
 spring:
   datasource:
     url: jdbc:h2:file:./camunda-h2-database
+    username: sa
+    password: passw
+    driver-class-name: org.h2.Driver
 
-camunda.bpm.admin-user:
-  id: demo
-  password: demo
+
 
 camunda:
   bpm:
+    deployment-resource-pattern: classpath:/processes/*.bpmn
+    admin-user:
+      id: sa
+      password: passw
+      first-name: Demo
+    authorization:
+      enabled: true
+    filter:
+      create: All tasks
+    default-serialization-format: application/json
     generic-properties:
       properties:
         historyTimeToLive: 5
+server:
+  error:
+    whitelabel:
+      enabled: false
