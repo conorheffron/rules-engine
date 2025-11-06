@@ -74,3 +74,15 @@ http://localhost:8080/api/eval?feature=search-v2&country=PT&appVersion=140&tier=
 ```
 <img width="763" height="103" alt="image" src="https://github.com/user-attachments/assets/d5272bb0-5227-4bc5-a555-7c4ddc80c238" />
 
+---
+
+## Camunda UI Tools (login with credentials in yml)
+```
+http://localhost:8080/
+```
+### Screenshots of Embedded Camunda UI
+<img width="1727" height="437" alt="image" src="https://github.com/user-attachments/assets/58cf84a9-4bc7-4ddc-a303-5935776c4cb9" />
+
+<img width="2443" height="415" alt="image" src="https://github.com/user-attachments/assets/f9cd9c1a-ac80-41f8-9ca7-08d53f912cca" />
+
+<img width="2446" height="779" alt="image" src="https://github.com/user-attachments/assets/3f80c09a-1527-49b6-8bb5-2a85c1400603" />
