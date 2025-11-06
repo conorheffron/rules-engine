@@ -68,3 +68,9 @@ http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=140&ti
 
 <img width="802" height="467" alt="image" src="https://github.com/user-attachments/assets/3a7b9ce8-8ff9-4073-81da-14a738504e33" />
 
+#### No Matches -> Feature Disabled
+```
+http://localhost:8080/api/eval?feature=search-v2&country=PT&appVersion=140&tier=gold
+```
+<img width="763" height="103" alt="image" src="https://github.com/user-attachments/assets/d5272bb0-5227-4bc5-a555-7c4ddc80c238" />
+
