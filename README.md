@@ -34,7 +34,7 @@ http://localhost:8080/api/eval?feature=new-checkout&country=IE&appVersion=1&tier
 <img width="761" height="163" alt="image" src="https://github.com/user-attachments/assets/490bd7d3-71e8-4281-b04e-efa4c79add37" />
 
 
-#### 2 Matches for feature, country, & app version rules (see application yml - tier not checked yet)
+#### 2 Matches for feature, country, & app version rules
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=120&tier=2
 ```
@@ -42,19 +42,19 @@ http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=120&ti
 <img width="810" height="416" alt="image" src="https://github.com/user-attachments/assets/972445c2-be54-4499-a38c-1413fcae5831" />
 
 
-#### 2 Matches for feature, country, & app version rules (see application yml - tier not checked yet)
+#### 2 Matches for feature, country, & app version rules 
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=400&tier=2
 ```
 
-#### 1 Match for feature & country (see application yml - tier not checked yet)
+#### 1 Match for feature & country
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=100&tier=2
 ```
 
 <img width="1286" height="286" alt="image" src="https://github.com/user-attachments/assets/cfb0ddd5-efb4-448a-9f12-5177172159ef" />
 
-#### 1 Match for feature & country (see application yml - tier not checked yet)
+#### 1 Match for feature & country
 ```
 http://localhost:8080/api/eval?feature=old-checkout&country=IRL&appVersion=100&tier=gold
 ```

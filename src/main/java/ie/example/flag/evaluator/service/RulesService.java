@@ -58,13 +58,13 @@ public class RulesService implements JavaDelegate {
         return objectMapper;
     }
 
-    public List<Rule> rulesMatcher(String feature, String country, String appVersion, Map<String,
-            Map<String, Object>> featureAllRules) {
+    public List<Rule> rulesMatcher(String feature, String country, String appVersion, String tier,
+                                   Map<String, Map<String, Object>> featureAllRules) {
         List<Rule> ruleMatch = new ArrayList<>();
         if (featureAllRules != null && !featureAllRules.isEmpty()) {
             for (Map<String, Object> ruleMap : featureAllRules.values()) {
                 Rule rule = this.objectMapper.convertValue(ruleMap, Rule.class);
-                LOGGER.info(String.format("----------: Rule info for feature set ALL %s is %s", feature, rule.toString()));
+                LOGGER.info(String.format("----------: Rule info for feature set %s is %s", feature, rule.toString()));
                 if (rule.getAttr().equalsIgnoreCase("country")) {
                     switch (rule.getOp()) {
                         case "IN":
@@ -85,6 +85,19 @@ public class RulesService implements JavaDelegate {
                             Optional<String> appVersionOptional = rule.getValues().values().stream().findFirst();
                             int vers = Integer.parseInt(appVersionOptional.get());
                             if (Integer.parseInt(appVersion) >= vers) {
+                                ruleMatch.add(rule);// append Rule
+                            }
+                            break;
+                        default:
+                            LOGGER.warn("Version OP not supported: " + rule.getOp());
+                            break;
+                    }
+                }
+                if (rule.getAttr().equalsIgnoreCase("tier")) {
+                    switch (rule.getOp()) {
+                        case "IN":
+                        case "EQ":
+                            if (rule.getValues().containsValue(tier)) {
                                 ruleMatch.add(rule);// append Rule
                             }
                             break;
