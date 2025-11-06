@@ -54,5 +54,7 @@ http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=100&ti
 
 <img width="1286" height="286" alt="image" src="https://github.com/user-attachments/assets/cfb0ddd5-efb4-448a-9f12-5177172159ef" />
 
-
-
+#### 1 Match for feature & country (see application yml - tier not checked yet)
+```
+http://localhost:8080/api/eval?feature=old-checkout&country=IRL&appVersion=100&tier=gold
+```
