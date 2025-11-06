@@ -34,7 +34,7 @@ http://localhost:8080/api/eval?feature=new-checkout&country=IE&appVersion=1&tier
 <img width="761" height="163" alt="image" src="https://github.com/user-attachments/assets/490bd7d3-71e8-4281-b04e-efa4c79add37" />
 
 
-#### 2 Matches for feature, country, & app version rules (see application yml - tier not checked yet)
+#### 2 Matches for feature, country, & app version rules
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=120&tier=2
 ```
@@ -42,19 +42,47 @@ http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=120&ti
 <img width="810" height="416" alt="image" src="https://github.com/user-attachments/assets/972445c2-be54-4499-a38c-1413fcae5831" />
 
 
-#### 2 Matches for feature, country, & app version rules (see application yml - tier not checked yet)
+#### 2 Matches for feature, country, & app version rules 
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=400&tier=2
 ```
 
-#### 1 Match for feature & country (see application yml - tier not checked yet)
+#### 1 Match for feature & country
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=100&tier=2
 ```
 
 <img width="1286" height="286" alt="image" src="https://github.com/user-attachments/assets/cfb0ddd5-efb4-448a-9f12-5177172159ef" />
 
-#### 1 Match for feature & country (see application yml - tier not checked yet)
+#### 2 Matches for feature & country
 ```
 http://localhost:8080/api/eval?feature=old-checkout&country=IRL&appVersion=100&tier=gold
 ```
+
+<img width="787" height="339" alt="image" src="https://github.com/user-attachments/assets/12a27a51-23c9-44bc-92c6-8628d26c6eb2" />
+
+#### 3 Matches for feature, country, & tier
+```
+http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=140&tier=gold
+```
+
+<img width="802" height="467" alt="image" src="https://github.com/user-attachments/assets/3a7b9ce8-8ff9-4073-81da-14a738504e33" />
+
+#### No Matches -> Feature Disabled
+```
+http://localhost:8080/api/eval?feature=search-v2&country=PT&appVersion=140&tier=gold
+```
+<img width="763" height="103" alt="image" src="https://github.com/user-attachments/assets/d5272bb0-5227-4bc5-a555-7c4ddc80c238" />
+
+---
+
+## Camunda UI Tools (login with credentials in yml)
+```
+http://localhost:8080/
+```
+### Screenshots of Embedded Camunda UI
+<img width="1727" height="437" alt="image" src="https://github.com/user-attachments/assets/58cf84a9-4bc7-4ddc-a303-5935776c4cb9" />
+
+<img width="2443" height="415" alt="image" src="https://github.com/user-attachments/assets/f9cd9c1a-ac80-41f8-9ca7-08d53f912cca" />
+
+<img width="2446" height="779" alt="image" src="https://github.com/user-attachments/assets/3f80c09a-1527-49b6-8bb5-2a85c1400603" />

@@ -56,11 +56,13 @@ public class FlagController {
                 ObjectMapper objectMapper = rulesService.getObjectMapper();
                 Map<String, Map<String, Object>> featureAllRules = objectMapper
                         .convertValue(ft.getRuleGroups().getAll(), Map.class);
-                allRuleMatch = rulesService.rulesMatcher(feature, country, appVersion, featureAllRules);
+                allRuleMatch = rulesService.rulesMatcher(feature, country,
+                        appVersion, tier, featureAllRules);
 
                 Map<String, Map<String, Object>> featureAnyRules = objectMapper
                         .convertValue(ft.getRuleGroups().getAny(), Map.class);
-                anyRuleMatch = rulesService.rulesMatcher(feature, country, appVersion, featureAnyRules);
+                anyRuleMatch = rulesService.rulesMatcher(feature, country,
+                        appVersion, tier, featureAnyRules);
             }
         }
 
