@@ -41,7 +41,7 @@ public class FlagController {
     }
 
     @GetMapping(value = "api/eval")
-    ResponseEntity<List<Rule>> evaluateConfig(@RequestParam(value = "feature") String feature,
+    ResponseEntity<List<Rule>> evaluateFlags(@RequestParam(value = "feature") String feature,
                                   @RequestParam(value = "country") String country,
                                   @RequestParam(value = "appVersion") String appVersion,
                                   @RequestParam(value = "tier") String tier) {
@@ -50,9 +50,8 @@ public class FlagController {
         List<Rule> allRuleMatch = new ArrayList<>();
         List<Rule> anyRuleMatch = new ArrayList<>();
 
-        Feature ft = rulesService.getFeaturesById().get(feature);
-
-        if (ft.isEnabled()) {
+        Feature ft = rulesService.getFeaturesById().getOrDefault(feature, null);
+        if (ft != null && ft.isEnabled()) {
             if (ft.getRuleGroups() != null) {
                 ObjectMapper objectMapper = rulesService.getObjectMapper();
                 Map<String, Map<String, Object>> featureAllRules = objectMapper
