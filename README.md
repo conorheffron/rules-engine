@@ -61,7 +61,7 @@ http://localhost:8080/api/eval?feature=old-checkout&country=IRL&appVersion=100&t
 
 <img width="787" height="339" alt="image" src="https://github.com/user-attachments/assets/12a27a51-23c9-44bc-92c6-8628d26c6eb2" />
 
-#### 3 Matches for feature, country, & tier
+#### 3 Matches for feature, country, app version, & tier
 ```
 http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=140&tier=gold
 ```
