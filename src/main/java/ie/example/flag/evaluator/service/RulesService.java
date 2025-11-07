@@ -102,7 +102,7 @@ public class RulesService implements JavaDelegate {
                             }
                             break;
                         default:
-                            LOGGER.warn("Version OP not supported: " + rule.getOp());
+                            LOGGER.warn("Tier OP not supported: " + rule.getOp());
                             break;
                     }
                 }
