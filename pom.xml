@@ -6,7 +6,7 @@
 
     <groupId>ie.example.flag.evaluator</groupId>
     <artifactId>rules-engine</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
