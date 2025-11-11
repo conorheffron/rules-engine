@@ -4,7 +4,8 @@
 
 [![Java CI with Maven](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml/badge.svg)](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml)
 
-### Sample Rules define in app configuration for a set of `features`
+### Sample Rules defined in app configuration for a set of `features`
+ - Rules can be enabled/disabled & each rule can have `attr`, `op`, & `values` value/values list.
 ```yml
 feature:
   new-checkout:
