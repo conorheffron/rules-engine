@@ -4,6 +4,34 @@
 
 [![Java CI with Maven](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml/badge.svg)](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml)
 
+### Sample Rules defined in app configuration for a set of `features`
+ - Rules can be enabled/disabled & each rule can have `attr`, `op`, & `values` value/values list.
+```yml
+feature:
+  new-checkout:
+    enabled: true
+    ruleGroups:
+      all:
+        - { attr: country, op: IN, values: [ "ES", "PT" ] }
+        - { attr: appVersion, op: GTE, values: [ "120" ] }
+      any:
+        - { attr: tier, op: IN, values: [ "gold", "platinum" ] }
+
+  search-v2:
+    enabled: false
+
+  beta-banner:
+    enabled: true
+
+  old-checkout:
+    enabled: true
+    ruleGroups:
+      all:
+        - { attr: country, op: IN, values: [ IRL ] }
+      any:
+        - { attr: tier, op: IN, values: [ gold, platinum ] }
+```
+
 ### Build & Run App
 ```shell
 mvn clean install spring-boot:run
