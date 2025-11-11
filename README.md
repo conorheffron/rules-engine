@@ -5,7 +5,7 @@
 [![Java CI with Maven](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml/badge.svg)](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml)
 
 ### Sample Rules defined in app configuration for a set of `features`
- - Eaxh feature can be `enabled or disabled` & each rule per feature can have `attr`, `op`, & `values` value/values list.
+ - Each feature can be `enabled or disabled` & each rule per feature can have `attr`, `op`, & `values` value/values list.
  - Rule Group logic not implemented yet - see #1 for intended / expected implementation details.
 ```yml
 feature:
