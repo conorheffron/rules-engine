@@ -7,7 +7,7 @@
 ### Sample Rules defined in app configuration for a set of `features`
  - Each `feature` can be `enabled or disabled`
  - Each rule per feature can have `attr`, `op`, & `values` value/values list.
- - `Rule Group` logic not implemented - see https://github.com/conorheffron/rules-engine/issues/13 for intended / expected implementation details.
+ - `Rule Group` logic for keys `all` & `any` not implemented - see https://github.com/conorheffron/rules-engine/issues/13 for intended / expected implementation details.
 ```yml
 feature:
   new-checkout:
