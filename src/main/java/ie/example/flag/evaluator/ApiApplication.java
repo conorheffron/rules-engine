@@ -12,10 +12,14 @@ import org.springframework.context.event.EventListener;
 @EnableProcessApplication
 public class ApiApplication {
 
-    @Autowired
-    private RuntimeService runtimeService;
+    private final RuntimeService runtimeService;
 
-    public static void main(String... args) {
+    @Autowired
+    public ApiApplication(RuntimeService runtimeService) {
+        this.runtimeService = runtimeService;
+    }
+
+    static void main(String... args) {
         SpringApplication.run(ApiApplication.class, args);
     }
 
@@ -23,5 +27,4 @@ public class ApiApplication {
     public void processPostDeploy(PostDeployEvent event) {
         runtimeService.startProcessInstanceByKey("loanApproval");
     }
-
 }
