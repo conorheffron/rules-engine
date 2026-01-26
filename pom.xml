@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
-        <spring.version>3.5.9</spring.version>
+        <spring.version>3.5.10</spring.version>
         <camunda.version>7.24.0</camunda.version>
     </properties>
 
