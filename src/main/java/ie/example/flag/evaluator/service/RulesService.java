@@ -2,11 +2,11 @@ package ie.example.flag.evaluator.service;
 
 import module java.base;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import ie.example.flag.evaluator.dto.Feature;
 import ie.example.flag.evaluator.dto.Rule;
+import ie.example.flag.evaluator.enums.FeatureType;
+import ie.example.flag.evaluator.enums.RuleOperator;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -23,15 +23,18 @@ public class RulesService implements JavaDelegate {
 
     private final Environment environment;
 
-    private Map<String, Feature> featuresById = new ConcurrentHashMap<>();
+    private final Map<String, Feature> featuresById = new ConcurrentHashMap<>();
 
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public RulesService(Environment environment) {
+    public RulesService(Environment environment, ObjectMapper objectMapper) {
         this.environment = environment;
-        this.objectMapper = new ObjectMapper(new YAMLFactory());
-        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.objectMapper = objectMapper;
+    }
+
+    public Map<String, Feature> getFeaturesById() {
+        return featuresById;
     }
 
     @Override
@@ -47,15 +50,6 @@ public class RulesService implements JavaDelegate {
             // store feature
             featuresById.put(featureKey, feature);
         }
-
-    }
-
-    public Map<String, Feature> getFeaturesById() {
-        return featuresById;
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 
     public List<Rule> rulesMatcher(String feature, String country, String appVersion, String tier,
@@ -64,50 +58,65 @@ public class RulesService implements JavaDelegate {
         if (featureAllRules != null && !featureAllRules.isEmpty()) {
             for (Map<String, Object> ruleMap : featureAllRules.values()) {
                 Rule rule = this.objectMapper.convertValue(ruleMap, Rule.class);
-                LOGGER.info(String.format("----------: Rule info for feature set %s is %s", feature, rule.toString()));
-                if (rule.getAttr().equalsIgnoreCase("country")) {
-                    switch (rule.getOp()) {
-                        case "IN":
-                        case "EQ":
-                            if (rule.getValues().containsValue(country)) {
-                                ruleMatch.add(rule);// append Rule
-                            }
-                            break;
-                        default:
-                            LOGGER.warn("Country OP not supported: " + rule.getOp());
-                            break;
-                    }
-                }
-                if (rule.getAttr().equalsIgnoreCase("appVersion")) {
-                    switch (rule.getOp()) {
-                        case "GTE":
-                        case "GT":
-                            Optional<String> appVersionOptional = rule.getValues().values().stream().findFirst();
-                            int vers = Integer.parseInt(appVersionOptional.get());
-                            if (Integer.parseInt(appVersion) >= vers) {
-                                ruleMatch.add(rule);// append Rule
-                            }
-                            break;
-                        default:
-                            LOGGER.warn("Version OP not supported: " + rule.getOp());
-                            break;
-                    }
-                }
-                if (rule.getAttr().equalsIgnoreCase("tier")) {
-                    switch (rule.getOp()) {
-                        case "IN":
-                        case "EQ":
-                            if (rule.getValues().containsValue(tier)) {
-                                ruleMatch.add(rule);// append Rule
-                            }
-                            break;
-                        default:
-                            LOGGER.warn("Tier OP not supported: " + rule.getOp());
-                            break;
-                    }
-                }
+                LOGGER.info("----------: Rule info for feature set {} is {}", feature, rule.toString());
+
+                RuleOperator ruleOperator = RuleOperator.fromStr(rule.op());
+                // validate features (check for matching rules)
+                validateCountryMatch(country, rule, ruleOperator, ruleMatch);
+                validateAppVersionMatch(appVersion, rule, ruleOperator, ruleMatch);
+                validateTierMatch(tier, rule, ruleOperator, ruleMatch);
             }
         }
         return ruleMatch;
+    }
+
+    private static void validateTierMatch(String tier, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
+        if (rule.attr().equalsIgnoreCase(FeatureType.TIER.name())) {
+            switch (ruleOperator) {
+                case RuleOperator.IN:
+                case RuleOperator.EQ:
+                    if (rule.values().containsValue(tier)) {
+                        ruleMatch.add(rule);// append Rule
+                    }
+                    break;
+                default:
+                    LOGGER.warn("Tier OP not supported: {}", rule.op());
+                    break;
+            }
+        }
+    }
+
+    private static void validateAppVersionMatch(String appVersion, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
+        if (rule.attr().equalsIgnoreCase(FeatureType.APPVERSION.name())) {
+            switch (ruleOperator) {
+                case RuleOperator.GTE:
+                case RuleOperator.GT:
+                    Optional<String> appVersionOptional = rule.values().values().stream().findFirst();
+                    int vers = Integer.parseInt(appVersionOptional.orElse("-1"));
+                    if (Integer.parseInt(appVersion) >= vers) {
+                        ruleMatch.add(rule);// append Rule
+                    }
+                    break;
+                default:
+                    LOGGER.warn("Version OP not supported: {}", rule.op());
+                    break;
+            }
+        }
+    }
+
+    private static void validateCountryMatch(String country, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
+        if (rule.attr().equalsIgnoreCase(FeatureType.COUNTRY.name())) {
+            switch (ruleOperator) {
+                case RuleOperator.IN:
+                case RuleOperator.EQ:
+                    if (rule.values().containsValue(country)) {
+                        ruleMatch.add(rule);// append Rule
+                    }
+                    break;
+                default:
+                    LOGGER.warn("Country OP not supported: {}", rule.op());
+                    break;
+            }
+        }
     }
 }
