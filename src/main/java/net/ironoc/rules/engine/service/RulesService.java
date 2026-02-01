@@ -3,6 +3,7 @@ package net.ironoc.rules.engine.service;
 import module java.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.ironoc.rules.engine.domain.ApiResponse;
 import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.Rule;
 import net.ironoc.rules.engine.enums.FeatureType;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -101,5 +103,36 @@ public class RulesService implements JavaDelegate {
                     break;
             }
         }
+    }
+
+    public ResponseEntity<ApiResponse> createResponseFromMatches(String feature,
+                                                                 List<Rule> allRuleMatch,
+                                                                 List<Rule> anyRuleMatch) {
+        if (allRuleMatch.isEmpty() && anyRuleMatch.isEmpty()) {
+            // no match
+            LOGGER.warn("Rules did not match for feature {}", feature);
+            return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
+        } else {
+            // direct match(es)
+            List<Rule> ruleMatch = new ArrayList<>();
+            ruleMatch.addAll(allRuleMatch);
+            ruleMatch.addAll(anyRuleMatch);
+            LOGGER.info("Rules set for feature {} is {}", feature, ruleMatch);
+            return ResponseEntity.ok().body(new ApiResponse(ruleMatch));
+        }
+    }
+
+    public List<Rule> getAnyRuleMatch(String country, String appVersion, String tier, Feature ft) {
+        Map<String, Map<String, Object>> featureAnyRules = objectMapper
+                .convertValue(ft.ruleGroups().any(), Map.class);
+        return rulesMatcher(country,
+                appVersion, tier, featureAnyRules);
+    }
+
+    public List<Rule> getAllRuleMatch(String country, String appVersion, String tier, Feature ft) {
+        Map<String, Map<String, Object>> featureAllRules = objectMapper
+                .convertValue(ft.ruleGroups().all(), Map.class);
+        return rulesMatcher(country,
+                appVersion, tier, featureAllRules);
     }
 }

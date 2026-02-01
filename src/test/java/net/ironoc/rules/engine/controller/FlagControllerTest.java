@@ -8,6 +8,7 @@ import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.RuleGroups;
 import net.ironoc.rules.engine.enums.FeatureType;
 import net.ironoc.rules.engine.service.RulesService;
+import org.camunda.bpm.engine.RuntimeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,8 @@ class FlagControllerTest {
     }
 
     private static FlagController controllerWith(RulesService service) {
-        return new FlagController(service, objectMapper());
+        RuntimeService runtimeService = mock(RuntimeService.class);
+        return new FlagController(service, objectMapper(), runtimeService);
     }
 
     @Test

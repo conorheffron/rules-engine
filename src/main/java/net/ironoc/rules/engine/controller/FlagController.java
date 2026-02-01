@@ -9,9 +9,8 @@ import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.Rule;
 import net.ironoc.rules.engine.enums.Country;
 import net.ironoc.rules.engine.service.RulesService;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.ProcessEngines;
-import org.camunda.bpm.engine.runtime.ProcessInstantiationBuilder;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.runtime.ProcessInstanceWithVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,15 @@ public class FlagController {
 
     private final ObjectMapper objectMapper;
 
+    private final RuntimeService runtimeService;
+
     @Autowired
     public FlagController(RulesService rulesService,
-                          ObjectMapper objectMapper) {
+                          ObjectMapper objectMapper,
+                          RuntimeService runtimeService) {
         this.rulesService = rulesService;
         this.objectMapper = objectMapper;
+        this.runtimeService = runtimeService;
     }
 
     @GetMapping(value = "api/test")
@@ -46,10 +49,14 @@ public class FlagController {
     ResponseEntity<String> executeTaskToLoadInitialRuleSet() {
         // TODO move to scheduled call or job,
         //  Note: This GET method/trigger is for testing purposes only to force load of initial rule set
-        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
-        ProcessInstantiationBuilder instance = engine.getRuntimeService().createProcessInstanceByKey("rules-init");
-        instance.executeWithVariablesInReturn();
-        return ResponseEntity.ok().body("Executed Camunda BPMN");
+        ProcessInstanceWithVariables result = runtimeService
+                .createProcessInstanceByKey("Rules_matcher")
+                .executeWithVariablesInReturn();
+
+        String pid = result.getProcessInstanceId();
+        LOGGER.info("Started Rules_matcher process instance id={}", pid);
+
+        return ResponseEntity.ok().body("{\"processInstanceId\":\"" + pid + "\"}");
     }
 
     @GetMapping(value = "api/eval", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,47 +68,12 @@ public class FlagController {
         LOGGER.info("Evaluating feature: {} for country: {} appVersion: {} tier: {}", feature, country, appVersion, tier);
         if (ft != null && ft.enabled()) {
             if (ft.ruleGroups() != null) {
-                List<Rule> allRuleMatch = getAllRuleMatch(country, appVersion, tier, ft);
-                List<Rule> anyRuleMatch = getAnyRuleMatch(country, appVersion, tier, ft);
-                return createResponseFromMatches(feature, allRuleMatch, anyRuleMatch);
+                List<Rule> allRuleMatch = rulesService.getAllRuleMatch(country, appVersion, tier, ft);
+                List<Rule> anyRuleMatch = rulesService.getAnyRuleMatch(country, appVersion, tier, ft);
+                return rulesService.createResponseFromMatches(feature, allRuleMatch, anyRuleMatch);
             }
         }
         LOGGER.warn("Feature {} is not enabled.", feature);
         return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
-    }
-
-    private ResponseEntity<ApiResponse> createResponseFromMatches(String feature,
-                                                                  List<Rule> allRuleMatch,
-                                                                  List<Rule> anyRuleMatch) {
-        if (allRuleMatch.isEmpty() && anyRuleMatch.isEmpty()) {
-            // no match
-            LOGGER.warn("Rules did not match for feature {}", feature);
-            return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
-        } else {
-            // direct match(es)
-            List<Rule> ruleMatch = new ArrayList<>();
-            ruleMatch.addAll(allRuleMatch);
-            ruleMatch.addAll(anyRuleMatch);
-            LOGGER.info("Rules set for feature {} is {}", feature, ruleMatch);
-            return ResponseEntity.ok().body(new ApiResponse(ruleMatch));
-        }
-    }
-
-    private List<Rule> getAnyRuleMatch(String country, String appVersion, String tier, Feature ft) {
-        List<Rule> anyRuleMatch;
-        Map<String, Map<String, Object>> featureAnyRules = objectMapper
-                .convertValue(ft.ruleGroups().any(), Map.class);
-        anyRuleMatch = rulesService.rulesMatcher(country,
-                appVersion, tier, featureAnyRules);
-        return anyRuleMatch;
-    }
-
-    private List<Rule> getAllRuleMatch(String country, String appVersion, String tier, Feature ft) {
-        List<Rule> allRuleMatch;
-        Map<String, Map<String, Object>> featureAllRules = objectMapper
-                .convertValue(ft.ruleGroups().all(), Map.class);
-        allRuleMatch = rulesService.rulesMatcher(country,
-                appVersion, tier, featureAllRules);
-        return allRuleMatch;
     }
 }
