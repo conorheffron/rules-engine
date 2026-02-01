@@ -39,7 +39,7 @@ public class RulesService implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
-        LOGGER.info("Initialize rules from local features config");
+        LOGGER.info("Initialize rules from local features config with vars: {}", execution.getVariables());
         Map<String, Object> appSettingConfig = Binder.get(environment)
                 .bind("feature", Map.class)
                 .orElseThrow(() -> new IllegalArgumentException("No properties found with prefix 'feature'"));
