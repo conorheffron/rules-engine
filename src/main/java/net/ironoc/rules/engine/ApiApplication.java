@@ -1,4 +1,4 @@
-package ie.example.flag.evaluator;
+package net.ironoc.rules.engine;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;

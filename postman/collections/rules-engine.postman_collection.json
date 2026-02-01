@@ -1,0 +1,324 @@
+{
+  "info": {
+    "_postman_id": "8e7209ce-0445-498f-bbef-ccb96985d789",
+    "name": "rules-engine",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "test",
+      "id": "697879db-3927-47c9-9716-7db2b4bd8170",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/test",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "test"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "executeTask",
+      "id": "c60deafb-51fe-42e3-9e81-1c0b272219f3",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/executetask",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "executetask"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rule match 1",
+      "id": "4d72a924-c16f-4133-b900-2a168bb846a5",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/eval?feature=new-checkout&country=IE&appVersion=1&tier=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "eval"
+          ],
+          "query": [
+            {
+              "key": "feature",
+              "value": "new-checkout"
+            },
+            {
+              "key": "country",
+              "value": "IE"
+            },
+            {
+              "key": "appVersion",
+              "value": "1"
+            },
+            {
+              "key": "tier",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rule match 2",
+      "id": "c4f2f073-7725-4fc9-a5fe-e6d54f843f95",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=120&tier=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "eval"
+          ],
+          "query": [
+            {
+              "key": "feature",
+              "value": "new-checkout"
+            },
+            {
+              "key": "country",
+              "value": "PT"
+            },
+            {
+              "key": "appVersion",
+              "value": "120"
+            },
+            {
+              "key": "tier",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rule match 3",
+      "id": "a1a575bb-e786-4068-897a-55c77f4b4e79",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=400&tier=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "eval"
+          ],
+          "query": [
+            {
+              "key": "feature",
+              "value": "new-checkout"
+            },
+            {
+              "key": "country",
+              "value": "ES"
+            },
+            {
+              "key": "appVersion",
+              "value": "400"
+            },
+            {
+              "key": "tier",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rule match 4",
+      "id": "8ada9363-a6cf-4c4f-b533-26843803a0d6",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/eval?feature=new-checkout&country=ES&appVersion=100&tier=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "eval"
+          ],
+          "query": [
+            {
+              "key": "feature",
+              "value": "new-checkout"
+            },
+            {
+              "key": "country",
+              "value": "ES"
+            },
+            {
+              "key": "appVersion",
+              "value": "100"
+            },
+            {
+              "key": "tier",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rule match 5",
+      "id": "2d3c2d21-68a6-4b0e-ae44-38b723c84ac5",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/eval?feature=old-checkout&country=IRL&appVersion=100&tier=gold",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "eval"
+          ],
+          "query": [
+            {
+              "key": "feature",
+              "value": "old-checkout"
+            },
+            {
+              "key": "country",
+              "value": "IRL"
+            },
+            {
+              "key": "appVersion",
+              "value": "100"
+            },
+            {
+              "key": "tier",
+              "value": "gold"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rule match 6",
+      "id": "c818f8c9-b438-4437-9125-e0f430a1280d",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/eval?feature=new-checkout&country=PT&appVersion=140&tier=gold",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "eval"
+          ],
+          "query": [
+            {
+              "key": "feature",
+              "value": "new-checkout"
+            },
+            {
+              "key": "country",
+              "value": "PT"
+            },
+            {
+              "key": "appVersion",
+              "value": "140"
+            },
+            {
+              "key": "tier",
+              "value": "gold"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "rule match 7",
+      "id": "9c61c25c-06c8-4c26-9327-b26062918374",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/eval?feature=search-v2&country=PT&appVersion=140&tier=gold",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "eval"
+          ],
+          "query": [
+            {
+              "key": "feature",
+              "value": "search-v2"
+            },
+            {
+              "key": "country",
+              "value": "PT"
+            },
+            {
+              "key": "appVersion",
+              "value": "140"
+            },
+            {
+              "key": "tier",
+              "value": "gold"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
