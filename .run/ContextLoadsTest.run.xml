@@ -8,7 +8,7 @@
       </pattern>
     </extension>
     <option name="PACKAGE_NAME" value="ie.example.flag.evaluator" />
-    <option name="MAIN_CLASS_NAME" value="ie.example.flag.evaluator.ContextLoadsTest" />
+    <option name="MAIN_CLASS_NAME" value="net.ironoc.rules.engine.ContextLoadsTest" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="VM_PARAMETERS" value="-ea -Dspring.profiles.active=test" />

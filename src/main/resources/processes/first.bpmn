@@ -12,7 +12,7 @@
     <startEvent id="startEvent" name="Start" />
 
     <!-- Service Task -->
-    <serviceTask id="serviceTask" name="Service Task Example" camunda:class="ie.example.flag.evaluator.service.RulesService" />
+    <serviceTask id="serviceTask" name="Service Task Example" camunda:class="net.ironoc.rules.engine.service.RulesService" />
 
     <!-- End Event -->
     <endEvent id="endEvent" name="End" />
