@@ -4,6 +4,15 @@
 
 [![Java CI with Maven](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml/badge.svg)](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml)
 
+# Proposed Design
+ - The workflow should:
+   - Read Rules from app configuration
+   - Store Rules in Map
+   - Match Rules against incoming request parameters
+ - This workflow diagram should be interactive where failed steps could be re-run to see the results of the rule evaluation etc. via the `Camunda Platform UI`.
+
+![Design](./src/main/resources/rules-matcher.png)
+
 ### Sample Rules defined in app configuration for a set of `features`
  - Each `feature` can be `enabled or disabled`
  - Each rule per feature can have `attr`, `op`, & `values` value/values list.
