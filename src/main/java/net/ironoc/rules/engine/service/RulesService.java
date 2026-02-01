@@ -7,9 +7,9 @@ import net.ironoc.rules.engine.domain.ApiResponse;
 import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.Rule;
 import net.ironoc.rules.engine.enums.FeatureType;
+import net.ironoc.rules.engine.enums.RuleGroup;
 import net.ironoc.rules.engine.enums.RuleOperator;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +19,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RulesService implements JavaDelegate {
+public class RulesService implements RuleServiceI {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RulesService.class);
 
     private final Environment environment;
 
-    private final Map<String, Feature> featuresById = new ConcurrentHashMap<>();
-
     private final ObjectMapper objectMapper;
 
+    private final DetailCacheI featureDetailsService;
+
     @Autowired
-    public RulesService(Environment environment, ObjectMapper objectMapper) {
+    public RulesService(Environment environment,
+                        ObjectMapper objectMapper,
+                        DetailCacheI featureDetailsService) {
         this.environment = environment;
         this.objectMapper = objectMapper;
+        this.featureDetailsService = featureDetailsService;
     }
 
-    public Map<String, Feature> getFeaturesById() {
-        return featuresById;
-    }
+
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -50,11 +51,41 @@ public class RulesService implements JavaDelegate {
             String featureKey = entry.getKey();
             Feature feature = objectMapper.convertValue(entry.getValue(), Feature.class);
             // store feature
-            featuresById.put(featureKey, feature);
+            featureDetailsService.put(featureKey, feature);
         }
     }
 
-    public List<Rule> rulesMatcher(String country, String appVersion, String tier,
+    @Override
+    public ResponseEntity<ApiResponse> createResponseFromMatches(String feature,
+                                                                 List<Rule> allRuleMatch,
+                                                                 List<Rule> anyRuleMatch) {
+        if (allRuleMatch.isEmpty() && anyRuleMatch.isEmpty()) {
+            // no match
+            LOGGER.warn("Rules did not match for feature {}", feature);
+            return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
+        } else {
+            // direct match(es)
+            List<Rule> ruleMatch = new ArrayList<>();
+            ruleMatch.addAll(allRuleMatch);
+            ruleMatch.addAll(anyRuleMatch);
+            LOGGER.info("Rules set for feature {} is {}", feature, ruleMatch);
+            return ResponseEntity.ok().body(new ApiResponse(ruleMatch));
+        }
+    }
+
+    @Override
+    public List<Rule> getRuleMatchByRuleGroup(String country, String appVersion, String tier,
+                                              Feature ft, RuleGroup ruleGroup) {
+        Map<String, Map<String, Object>> ruleGrps = switch (ruleGroup) {
+            case ALL -> ft.ruleGroups().all();
+            case ANY -> ft.ruleGroups().any();
+        };
+        Map<String, Map<String, Object>> featureRules = objectMapper
+                .convertValue(ruleGrps, Map.class);
+        return rulesMatcher(country,  appVersion, tier, featureRules);
+    }
+
+    protected List<Rule> rulesMatcher(String country, String appVersion, String tier,
                                    Map<String, Map<String, Object>> featureAllRules) {
         List<Rule> ruleMatch = new ArrayList<>();
         if (featureAllRules != null && !featureAllRules.isEmpty()) {
@@ -103,36 +134,5 @@ public class RulesService implements JavaDelegate {
                     break;
             }
         }
-    }
-
-    public ResponseEntity<ApiResponse> createResponseFromMatches(String feature,
-                                                                 List<Rule> allRuleMatch,
-                                                                 List<Rule> anyRuleMatch) {
-        if (allRuleMatch.isEmpty() && anyRuleMatch.isEmpty()) {
-            // no match
-            LOGGER.warn("Rules did not match for feature {}", feature);
-            return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
-        } else {
-            // direct match(es)
-            List<Rule> ruleMatch = new ArrayList<>();
-            ruleMatch.addAll(allRuleMatch);
-            ruleMatch.addAll(anyRuleMatch);
-            LOGGER.info("Rules set for feature {} is {}", feature, ruleMatch);
-            return ResponseEntity.ok().body(new ApiResponse(ruleMatch));
-        }
-    }
-
-    public List<Rule> getAnyRuleMatch(String country, String appVersion, String tier, Feature ft) {
-        Map<String, Map<String, Object>> featureAnyRules = objectMapper
-                .convertValue(ft.ruleGroups().any(), Map.class);
-        return rulesMatcher(country,
-                appVersion, tier, featureAnyRules);
-    }
-
-    public List<Rule> getAllRuleMatch(String country, String appVersion, String tier, Feature ft) {
-        Map<String, Map<String, Object>> featureAllRules = objectMapper
-                .convertValue(ft.ruleGroups().all(), Map.class);
-        return rulesMatcher(country,
-                appVersion, tier, featureAllRules);
     }
 }

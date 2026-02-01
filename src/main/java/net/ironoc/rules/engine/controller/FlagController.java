@@ -7,7 +7,9 @@ import net.ironoc.rules.engine.domain.TestApiResponse;
 import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.Rule;
 import net.ironoc.rules.engine.enums.Country;
-import net.ironoc.rules.engine.service.RulesService;
+import net.ironoc.rules.engine.enums.RuleGroup;
+import net.ironoc.rules.engine.service.DetailCacheI;
+import net.ironoc.rules.engine.service.RuleServiceI;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstanceWithVariables;
 import org.slf4j.Logger;
@@ -24,15 +26,19 @@ public class FlagController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlagController.class);
 
-    private final RulesService rulesService;
+    private final RuleServiceI rulesService;
 
     private final RuntimeService runtimeService;
 
+    private final DetailCacheI featureDetailsService;
+
     @Autowired
-    public FlagController(RulesService rulesService,
-                          RuntimeService runtimeService) {
+    public FlagController(RuleServiceI rulesService,
+                          RuntimeService runtimeService,
+                          DetailCacheI featureDetailsService) {
         this.rulesService = rulesService;
         this.runtimeService = runtimeService;
+        this.featureDetailsService = featureDetailsService;
     }
 
     @GetMapping(value = "api/test")
@@ -59,12 +65,14 @@ public class FlagController {
                                               @RequestParam(value = "country") String country,
                                               @RequestParam(value = "appVersion") String appVersion,
                                               @RequestParam(value = "tier") String tier) {
-        Feature ft = rulesService.getFeaturesById().getOrDefault(feature, null);
+        Feature ft = featureDetailsService.getFeaturesById().getOrDefault(feature, null);
         LOGGER.info("Evaluating feature: {} for country: {} appVersion: {} tier: {}", feature, country, appVersion, tier);
         if (ft != null && ft.enabled()) {
             if (ft.ruleGroups() != null) {
-                List<Rule> allRuleMatch = rulesService.getAllRuleMatch(country, appVersion, tier, ft);
-                List<Rule> anyRuleMatch = rulesService.getAnyRuleMatch(country, appVersion, tier, ft);
+                List<Rule> allRuleMatch = rulesService.getRuleMatchByRuleGroup(country, appVersion,
+                        tier, ft, RuleGroup.ALL);
+                List<Rule> anyRuleMatch = rulesService.getRuleMatchByRuleGroup(country, appVersion,
+                        tier, ft, RuleGroup.ANY);
                 return rulesService.createResponseFromMatches(feature, allRuleMatch, anyRuleMatch);
             }
         }

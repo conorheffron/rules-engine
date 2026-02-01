@@ -1,7 +1,7 @@
 package net.ironoc.rules.engine.delegate;
 
 import net.ironoc.rules.engine.dto.Feature;
-import net.ironoc.rules.engine.service.RulesService;
+import net.ironoc.rules.engine.service.DetailCacheI;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -21,10 +21,10 @@ public class FeatureEnabledDelegate implements JavaDelegate {
     public static final String VAR_RULE_GROUPS_ALL = "ruleGroupsAll";
     public static final String VAR_RULE_GROUPS_ANY = "ruleGroupsAny";
 
-    private final RulesService rulesService;
+    private final DetailCacheI featureDetailsService;
 
-    public FeatureEnabledDelegate(RulesService rulesService) {
-        this.rulesService = rulesService;
+    public FeatureEnabledDelegate(DetailCacheI featureDetailsService) {
+        this.featureDetailsService = featureDetailsService;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class FeatureEnabledDelegate implements JavaDelegate {
         // TODO
         String featureId = Objects.toString(execution.getVariable(VAR_FEATURE), "").trim();
 
-        Feature feature = featureId.isEmpty() ? null : rulesService.getFeaturesById().get(featureId);
+        Feature feature = featureId.isEmpty() ? null : featureDetailsService.getFeaturesById().get(featureId);
         boolean enabled = feature != null && feature.enabled();
 
         execution.setVariable(VAR_FEATURE_ENABLED, enabled);

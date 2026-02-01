@@ -7,6 +7,7 @@ import net.ironoc.rules.engine.domain.ApiResponse;
 import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.RuleGroups;
 import net.ironoc.rules.engine.enums.FeatureType;
+import net.ironoc.rules.engine.service.FeatureDetailService;
 import net.ironoc.rules.engine.service.RulesService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.junit.jupiter.api.Test;
@@ -24,14 +25,16 @@ class FlagControllerTest {
         return new ObjectMapper();
     }
 
+    private static FeatureDetailService featureDetailService = new FeatureDetailService();
+
     private static RulesService rulesService() {
         Environment env = mock(Environment.class);
-        return new RulesService(env, objectMapper());
+        return new RulesService(env, objectMapper(), featureDetailService);
     }
 
     private static FlagController controllerWith(RulesService service) {
         RuntimeService runtimeService = mock(RuntimeService.class);
-        return new FlagController(service, runtimeService);
+        return new FlagController(service, runtimeService, featureDetailService);
     }
 
     @Test
@@ -54,8 +57,9 @@ class FlagControllerTest {
     @Test
     void evaluateFlags_featureDisabled_returnsBadRequestAndEmptyList() {
         // given
+        featureDetailService.clear();
         RulesService service = rulesService();
-        service.getFeaturesById().put("new-checkout", new Feature(false, null));
+        featureDetailService.put("new-checkout", new Feature(false, null));
         FlagController controller = controllerWith(service);
 
         // when
@@ -91,7 +95,8 @@ class FlagControllerTest {
         );
 
         Feature feature = new Feature(true, new RuleGroups(all, any));
-        service.getFeaturesById().put("new-checkout", feature);
+        featureDetailService.clear();
+        featureDetailService.put("new-checkout", feature);
 
         FlagController controller = controllerWith(service);
 

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.Rule;
-import net.ironoc.rules.engine.service.RulesService;
+import net.ironoc.rules.engine.enums.RuleGroup;
+import net.ironoc.rules.engine.service.DetailCacheI;
+import net.ironoc.rules.engine.service.RuleServiceI;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
@@ -25,11 +27,16 @@ public class RulesAggregatorDelegate implements JavaDelegate {
     public static final String VAR_RULES_JSON = "rulesJson";
 
     private final ObjectMapper objectMapper;
-    private final RulesService rulesService;
 
-    public RulesAggregatorDelegate(ObjectMapper objectMapper, RulesService rulesService) {
+    private final RuleServiceI rulesService;
+
+    private final DetailCacheI featureDetailsService;
+
+    public RulesAggregatorDelegate(ObjectMapper objectMapper, RuleServiceI rulesService,
+                                   DetailCacheI featureDetailsService) {
         this.objectMapper = objectMapper;
         this.rulesService = rulesService;
+        this.featureDetailsService = featureDetailsService;
     }
 
     @Override
@@ -47,10 +54,13 @@ public class RulesAggregatorDelegate implements JavaDelegate {
             String tier = Objects.toString(execution.getVariable(TierDelegate.VAR_TIER), "").trim();
 
             String featureId = Objects.toString(execution.getVariable(VAR_FEATURE), "").trim();
-            Feature ft = featureId.isEmpty() ? null : rulesService.getFeaturesById().get(featureId);
-            List<Rule> allRuleMatch = rulesService.getAllRuleMatch(country, appVersion, tier, ft);
-            List<Rule> anyRuleMatch = rulesService.getAnyRuleMatch(country, appVersion, tier, ft);
-            matchedRules = Objects.requireNonNull(rulesService.createResponseFromMatches(featureId, allRuleMatch, anyRuleMatch).getBody()).rules();
+            Feature ft = featureId.isEmpty() ? null : featureDetailsService.getFeaturesById().get(featureId);
+            List<Rule> allRuleMatch = rulesService.getRuleMatchByRuleGroup(country, appVersion, tier,
+                    ft, RuleGroup.ALL);
+            List<Rule> anyRuleMatch = rulesService.getRuleMatchByRuleGroup(country, appVersion, tier,
+                    ft, RuleGroup.ANY);
+            matchedRules = Objects.requireNonNull(rulesService.createResponseFromMatches(featureId, allRuleMatch,
+                    anyRuleMatch).getBody()).rules();
         }
 
         execution.setVariable(PassEngineDelegate.VAR_MATCHED_RULES, matchedRules);
