@@ -2,7 +2,6 @@ package net.ironoc.rules.engine.controller;
 
 import module java.base;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ironoc.rules.engine.domain.ApiResponse;
 import net.ironoc.rules.engine.domain.TestApiResponse;
 import net.ironoc.rules.engine.dto.Feature;
@@ -27,16 +26,12 @@ public class FlagController {
 
     private final RulesService rulesService;
 
-    private final ObjectMapper objectMapper;
-
     private final RuntimeService runtimeService;
 
     @Autowired
     public FlagController(RulesService rulesService,
-                          ObjectMapper objectMapper,
                           RuntimeService runtimeService) {
         this.rulesService = rulesService;
-        this.objectMapper = objectMapper;
         this.runtimeService = runtimeService;
     }
 

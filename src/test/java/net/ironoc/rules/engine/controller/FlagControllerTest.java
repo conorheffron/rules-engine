@@ -31,7 +31,7 @@ class FlagControllerTest {
 
     private static FlagController controllerWith(RulesService service) {
         RuntimeService runtimeService = mock(RuntimeService.class);
-        return new FlagController(service, objectMapper(), runtimeService);
+        return new FlagController(service, runtimeService);
     }
 
     @Test
