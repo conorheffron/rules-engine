@@ -19,6 +19,7 @@ public class PassEngineDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
+        // TODO
         execution.setVariable(VAR_SKIP_RULES_ENGINE, true);
         execution.setVariable(VAR_MATCHED_RULES, new ArrayList<Rule>());
 

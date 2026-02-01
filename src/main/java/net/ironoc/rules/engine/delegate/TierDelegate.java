@@ -17,6 +17,7 @@ public class TierDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
+        // TODO
         String tier = Objects.toString(execution.getVariable(VAR_TIER), "").trim();
         LOGGER.info("Tier captured='{}' (matching is performed in RulesAggregatorDelegate via RulesService).", tier);
     }

@@ -17,6 +17,7 @@ public class FeatureDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
+        // TODO
         String country = Objects.toString(execution.getVariable(VAR_COUNTRY), "").trim();
         LOGGER.info("Country captured='{}' (matching is performed in RulesAggregatorDelegate via RulesService).", country);
     }
