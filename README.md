@@ -130,97 +130,97 @@ http://localhost:8080/
 
 
 ## Sample Logs (from test cases above):
-```jshelllanguage
-____                                 _         ____  _       _    __
-    / ___| __ _ _ __ ___  _   _ _ __   __| | __ _  |  _ \| | __ _| |_ / _| ___  _ __ _ __ ___
-| |   / _` | '_ ` _ \| | | | '_ \ / _` |/ _` | | |_) | |/ _` | __| |_ / _ \| '__| '_ ` _ \
+```shell
+ ____                                 _         ____  _       _    __                      
+/ ___| __ _ _ __ ___  _   _ _ __   __| | __ _  |  _ \| | __ _| |_ / _| ___  _ __ _ __ ___  
+| |   / _` | '_ ` _ \| | | | '_ \ / _` |/ _` | | |_) | |/ _` | __| |_ / _ \| '__| '_ ` _ \ 
 | |__| (_| | | | | | | |_| | | | | (_| | (_| | |  __/| | (_| | |_|  _| (_) | |  | | | | | |
 \____/\__,_|_| |_| |_|\__,_|_| |_|\__,_|\__,_| |_|   |_|\__,_|\__|_|  \___/|_|  |_| |_| |_|
 
-Spring-Boot:  (v3.5.10)
-Camunda Platform: (v7.24.0)
-Camunda Platform Spring Boot Starter: (v7.24.0)
+  Spring-Boot:  (v3.5.10)
+  Camunda Platform: (v7.24.0)
+  Camunda Platform Spring Boot Starter: (v7.24.0)
 
-2026-02-01T00:34:59.455Z  INFO 32081 --- [           main] net.ironoc.rules.engine.ApiApplication   : Starting ApiApplication using Java 25 with PID 32081 (/Users/conorheffron/workspace/fd-flag-eval/target/classes started by conorheffron in /Users/conorheffron/workspace/fd-flag-eval)
-2026-02-01T00:34:59.459Z  INFO 32081 --- [           main] net.ironoc.rules.engine.ApiApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-02-01T00:35:00.472Z  INFO 32081 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-02-01T00:35:00.496Z  INFO 32081 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 0 JPA repository interfaces.
-2026-02-01T00:35:01.031Z  INFO 32081 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-02-01T00:35:01.044Z  INFO 32081 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-02-01T00:35:01.044Z  INFO 32081 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.50]
-2026-02-01T00:35:01.104Z  INFO 32081 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-02-01T00:35:01.105Z  INFO 32081 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1557 ms
-2026-02-01T00:35:01.126Z  INFO 32081 --- [           main] .c.b.s.b.s.r.CamundaJerseyResourceConfig : Configuring camunda rest api.
-2026-02-01T00:35:01.151Z  INFO 32081 --- [           main] .c.b.s.b.s.r.CamundaJerseyResourceConfig : Finished configuring camunda rest api.
-2026-02-01T00:35:01.440Z  INFO 32081 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-02-01T00:35:01.491Z  INFO 32081 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.41.Final
-2026-02-01T00:35:01.524Z  INFO 32081 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-02-01T00:35:01.845Z  INFO 32081 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-02-01T00:35:01.874Z  INFO 32081 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-02-01T00:35:02.168Z  INFO 32081 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./camunda-h2-database user=SA
-2026-02-01T00:35:02.170Z  INFO 32081 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-02-01T00:35:02.220Z  INFO 32081 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
-Database driver: undefined/unknown
-Database version: 2.3.232
-Autocommit mode: undefined/unknown
-Isolation level: undefined/unknown
-Minimum pool size: undefined/unknown
-Maximum pool size: undefined/unknown
-2026-02-01T00:35:02.554Z  INFO 32081 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-02-01T00:35:02.558Z  INFO 32081 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-02-01T00:35:02.604Z  INFO 32081 --- [           main] org.camunda.bpm.spring.boot              : STARTER-SB040 Setting up jobExecutor with corePoolSize=3, maxPoolSize:10
-2026-02-01T00:35:02.658Z  INFO 32081 --- [           main] org.camunda.bpm.engine.cfg               : ENGINE-12003 Plugin 'CompositeProcessEnginePlugin[genericPropertiesConfiguration, camundaProcessEngineConfiguration, camundaDatasourceConfiguration, camundaJobConfiguration, camundaHistoryConfiguration, camundaMetricsConfiguration, camundaAuthorizationConfiguration, createAdminUserConfiguration, failedJobConfiguration, CreateFilterConfiguration[filterName=All tasks], disableDeploymentResourcePattern, eventPublisherPlugin, ApplicationContextClassloaderSwitchPlugin, SpringBootSpinProcessEnginePlugin]' activated on process engine 'default'
-2026-02-01T00:35:02.678Z  INFO 32081 --- [           main] org.camunda.bpm.spring.boot              : STARTER-SB020 ProcessApplication enabled: autoDeployment via springConfiguration#deploymentResourcePattern is disabled
-2026-02-01T00:35:02.678Z  INFO 32081 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-001: Initialized Camunda Spring Boot Eventing Engine Plugin.
-2026-02-01T00:35:02.678Z  INFO 32081 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-003: Task events will be published as Spring Events.
-2026-02-01T00:35:02.678Z  INFO 32081 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-005: Execution events will be published as Spring Events.
-2026-02-01T00:35:02.679Z  INFO 32081 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-009: Listeners will not be invoked if a skipCustomListeners API parameter is set to true by user.
-2026-02-01T00:35:02.682Z  INFO 32081 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-007: History events will be published as Spring events.
-2026-02-01T00:35:02.686Z  INFO 32081 --- [           main] org.camunda.spin                         : SPIN-01010 Discovered Spin data format provider: org.camunda.spin.impl.json.jackson.format.JacksonJsonDataFormatProvider[name = application/json]
-2026-02-01T00:35:02.836Z  INFO 32081 --- [           main] org.camunda.spin                         : SPIN-01010 Discovered Spin data format provider: org.camunda.spin.impl.xml.dom.format.DomXmlDataFormatProvider[name = application/xml]
-2026-02-01T00:35:02.924Z  INFO 32081 --- [           main] org.camunda.spin                         : SPIN-01009 Discovered Spin data format: org.camunda.spin.impl.xml.dom.format.DomXmlDataFormat[name = application/xml]
-2026-02-01T00:35:02.924Z  INFO 32081 --- [           main] org.camunda.spin                         : SPIN-01009 Discovered Spin data format: org.camunda.spin.impl.json.jackson.format.JacksonJsonDataFormat[name = application/json]
-2026-02-01T00:35:03.005Z  INFO 32081 --- [           main] org.camunda.bpm.dmn.feel.scala           : FEEL/SCALA-01001 Spin value mapper detected
-2026-02-01T00:35:05.031Z  INFO 32081 --- [           main] org.camunda.bpm.engine                   : ENGINE-00001 Process Engine default created.
-2026-02-01T00:35:05.076Z  INFO 32081 --- [           main] org.camunda.bpm.spring.boot              : STARTER-SB016 Skip initial filter creation, the filter with this name already exists: All tasks
-2026-02-01T00:35:05.092Z  WARN 32081 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-02-01T00:35:05.402Z  INFO 32081 --- [           main] o.c.b.s.b.s.w.f.LazyInitRegistration     : lazy initialized org.camunda.bpm.spring.boot.starter.webapp.filter.LazyProcessEnginesFilter@3caee3a8
-2026-02-01T00:35:05.454Z  INFO 32081 --- [           main] o.c.b.s.b.s.w.f.LazyInitRegistration     : lazy initialized org.camunda.bpm.spring.boot.starter.webapp.filter.LazySecurityFilter@6870cfac
-2026-02-01T00:35:05.571Z  INFO 32081 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-02-01T00:35:05.709Z  INFO 32081 --- [           main] org.camunda.bpm.container                : ENGINE-08024 Found processes.xml file at file:/Users/conorheffron/workspace/fd-flag-eval/target/classes/META-INF/processes.xml
-2026-02-01T00:35:05.710Z  INFO 32081 --- [           main] org.camunda.bpm.container                : ENGINE-08025 Detected empty processes.xml file, using default values
-2026-02-01T00:35:05.716Z  INFO 32081 --- [           main] org.camunda.bpm.container                : ENGINE-08023 Deployment summary for process archive 'apiApplication':
+2026-02-01T00:38:32.449Z  INFO 32328 --- [           main] net.ironoc.rules.engine.ApiApplication   : Starting ApiApplication using Java 25 with PID 32328 (/Users/conorheffron/workspace/fd-flag-eval/target/classes started by conorheffron in /Users/conorheffron/workspace/fd-flag-eval)
+2026-02-01T00:38:32.452Z  INFO 32328 --- [           main] net.ironoc.rules.engine.ApiApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-02-01T00:38:33.213Z  INFO 32328 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-01T00:38:33.234Z  INFO 32328 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 JPA repository interfaces.
+2026-02-01T00:38:33.758Z  INFO 32328 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-02-01T00:38:33.771Z  INFO 32328 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-01T00:38:33.771Z  INFO 32328 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-02-01T00:38:33.829Z  INFO 32328 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-01T00:38:33.830Z  INFO 32328 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1310 ms
+2026-02-01T00:38:33.850Z  INFO 32328 --- [           main] .c.b.s.b.s.r.CamundaJerseyResourceConfig : Configuring camunda rest api.
+2026-02-01T00:38:33.873Z  INFO 32328 --- [           main] .c.b.s.b.s.r.CamundaJerseyResourceConfig : Finished configuring camunda rest api.
+2026-02-01T00:38:34.138Z  INFO 32328 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-01T00:38:34.190Z  INFO 32328 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.41.Final
+2026-02-01T00:38:34.221Z  INFO 32328 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-02-01T00:38:34.548Z  INFO 32328 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-01T00:38:34.578Z  INFO 32328 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-01T00:38:34.900Z  INFO 32328 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./camunda-h2-database user=SA
+2026-02-01T00:38:34.901Z  INFO 32328 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-01T00:38:34.956Z  INFO 32328 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-01T00:38:35.342Z  INFO 32328 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-01T00:38:35.347Z  INFO 32328 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-01T00:38:35.391Z  INFO 32328 --- [           main] org.camunda.bpm.spring.boot              : STARTER-SB040 Setting up jobExecutor with corePoolSize=3, maxPoolSize:10
+2026-02-01T00:38:35.445Z  INFO 32328 --- [           main] org.camunda.bpm.engine.cfg               : ENGINE-12003 Plugin 'CompositeProcessEnginePlugin[genericPropertiesConfiguration, camundaProcessEngineConfiguration, camundaDatasourceConfiguration, camundaJobConfiguration, camundaHistoryConfiguration, camundaMetricsConfiguration, camundaAuthorizationConfiguration, createAdminUserConfiguration, failedJobConfiguration, CreateFilterConfiguration[filterName=All tasks], disableDeploymentResourcePattern, eventPublisherPlugin, ApplicationContextClassloaderSwitchPlugin, SpringBootSpinProcessEnginePlugin]' activated on process engine 'default'
+2026-02-01T00:38:35.462Z  INFO 32328 --- [           main] org.camunda.bpm.spring.boot              : STARTER-SB020 ProcessApplication enabled: autoDeployment via springConfiguration#deploymentResourcePattern is disabled
+2026-02-01T00:38:35.463Z  INFO 32328 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-001: Initialized Camunda Spring Boot Eventing Engine Plugin.
+2026-02-01T00:38:35.463Z  INFO 32328 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-003: Task events will be published as Spring Events.
+2026-02-01T00:38:35.463Z  INFO 32328 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-005: Execution events will be published as Spring Events.
+2026-02-01T00:38:35.463Z  INFO 32328 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-009: Listeners will not be invoked if a skipCustomListeners API parameter is set to true by user.
+2026-02-01T00:38:35.467Z  INFO 32328 --- [           main] o.c.b.s.b.s.event.EventPublisherPlugin   : EVENTING-007: History events will be published as Spring events.
+2026-02-01T00:38:35.471Z  INFO 32328 --- [           main] org.camunda.spin                         : SPIN-01010 Discovered Spin data format provider: org.camunda.spin.impl.json.jackson.format.JacksonJsonDataFormatProvider[name = application/json]
+2026-02-01T00:38:35.662Z  INFO 32328 --- [           main] org.camunda.spin                         : SPIN-01010 Discovered Spin data format provider: org.camunda.spin.impl.xml.dom.format.DomXmlDataFormatProvider[name = application/xml]
+2026-02-01T00:38:35.738Z  INFO 32328 --- [           main] org.camunda.spin                         : SPIN-01009 Discovered Spin data format: org.camunda.spin.impl.xml.dom.format.DomXmlDataFormat[name = application/xml]
+2026-02-01T00:38:35.738Z  INFO 32328 --- [           main] org.camunda.spin                         : SPIN-01009 Discovered Spin data format: org.camunda.spin.impl.json.jackson.format.JacksonJsonDataFormat[name = application/json]
+2026-02-01T00:38:35.835Z  INFO 32328 --- [           main] org.camunda.bpm.dmn.feel.scala           : FEEL/SCALA-01001 Spin value mapper detected
+2026-02-01T00:38:37.784Z  INFO 32328 --- [           main] org.camunda.bpm.engine                   : ENGINE-00001 Process Engine default created.
+2026-02-01T00:38:37.823Z  INFO 32328 --- [           main] org.camunda.bpm.spring.boot              : STARTER-SB016 Skip initial filter creation, the filter with this name already exists: All tasks
+2026-02-01T00:38:37.837Z  WARN 32328 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-01T00:38:38.155Z  INFO 32328 --- [           main] o.c.b.s.b.s.w.f.LazyInitRegistration     : lazy initialized org.camunda.bpm.spring.boot.starter.webapp.filter.LazySecurityFilter@2c9306d3
+2026-02-01T00:38:38.156Z  INFO 32328 --- [           main] o.c.b.s.b.s.w.f.LazyInitRegistration     : lazy initialized org.camunda.bpm.spring.boot.starter.webapp.filter.LazyProcessEnginesFilter@6629643d
+2026-02-01T00:38:38.266Z  INFO 32328 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-02-01T00:38:38.358Z  INFO 32328 --- [           main] org.camunda.bpm.container                : ENGINE-08024 Found processes.xml file at file:/Users/conorheffron/workspace/fd-flag-eval/target/classes/META-INF/processes.xml
+2026-02-01T00:38:38.359Z  INFO 32328 --- [           main] org.camunda.bpm.container                : ENGINE-08025 Detected empty processes.xml file, using default values
+2026-02-01T00:38:38.367Z  INFO 32328 --- [           main] org.camunda.bpm.container                : ENGINE-08023 Deployment summary for process archive 'apiApplication': 
 
-processes/first.bpmn
-processes/loanApproval.bpmn
+        processes/first.bpmn
+        processes/loanApproval.bpmn
 
-2026-02-01T00:35:06.043Z  INFO 32081 --- [           main] org.camunda.bpm.application              : ENGINE-07021 ProcessApplication 'apiApplication' registered for DB deployments [d4b24f43-ff05-11f0-89ab-ba78e369f0f4]. Will execute process definitions
+2026-02-01T00:38:38.658Z  INFO 32328 --- [           main] org.camunda.bpm.application              : ENGINE-07021 ProcessApplication 'apiApplication' registered for DB deployments [d4b24f43-ff05-11f0-89ab-ba78e369f0f4]. Will execute process definitions 
 
-loanApproval[version: 1, id: loanApproval:1:d4cf2617-ff05-11f0-89ab-ba78e369f0f4]
-rules-init[version: 1, id: rules-init:1:d4ce3bb6-ff05-11f0-89ab-ba78e369f0f4]
+        loanApproval[version: 1, id: loanApproval:1:d4cf2617-ff05-11f0-89ab-ba78e369f0f4]
+        rules-init[version: 1, id: rules-init:1:d4ce3bb6-ff05-11f0-89ab-ba78e369f0f4]
 Deployment does not provide any case definitions.
-2026-02-01T00:35:06.149Z  INFO 32081 --- [           main] org.camunda.bpm.container                : ENGINE-08050 Process application apiApplication successfully deployed
-2026-02-01T00:35:06.152Z  INFO 32081 --- [           main] net.ironoc.rules.engine.ApiApplication   : Started ApiApplication in 7.276 seconds (process running for 7.774)
-2026-02-01T00:35:06.155Z  INFO 32081 --- [           main] org.camunda.bpm.engine.jobexecutor       : ENGINE-14014 Starting up the JobExecutor[org.camunda.bpm.engine.spring.components.jobexecutor.SpringJobExecutor].
-2026-02-01T00:35:06.156Z  INFO 32081 --- [ingJobExecutor]] org.camunda.bpm.engine.jobexecutor       : ENGINE-14018 JobExecutor[org.camunda.bpm.engine.spring.components.jobexecutor.SpringJobExecutor] starting to acquire jobs
-2026-02-01T00:35:13.105Z  INFO 32081 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-02-01T00:35:13.105Z  INFO 32081 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-02-01T00:35:13.108Z  INFO 32081 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2026-02-01T00:35:13.172Z  INFO 32081 --- [nio-8080-exec-1] n.i.r.engine.controller.FlagController   : Test yml value is: true
-2026-02-01T00:35:16.977Z  INFO 32081 --- [nio-8080-exec-3] n.i.rules.engine.service.RulesService    : Initialize rules from local features config
-2026-02-01T00:35:20.537Z  INFO 32081 --- [nio-8080-exec-4] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: IE appVersion: 1 tier: 2
-2026-02-01T00:35:20.540Z  WARN 32081 --- [nio-8080-exec-4] n.i.r.engine.controller.FlagController   : Rules did not match for feature new-checkout
-2026-02-01T00:35:23.564Z  INFO 32081 --- [nio-8080-exec-6] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: PT appVersion: 120 tier: 2
-2026-02-01T00:35:23.564Z  INFO 32081 --- [nio-8080-exec-6] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}, Rule{attr='appVersion', op='GTE', values={0=120}}]
-2026-02-01T00:35:28.216Z  INFO 32081 --- [nio-8080-exec-7] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: ES appVersion: 400 tier: 2
-2026-02-01T00:35:28.216Z  INFO 32081 --- [nio-8080-exec-7] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}, Rule{attr='appVersion', op='GTE', values={0=120}}]
-2026-02-01T00:35:32.709Z  INFO 32081 --- [nio-8080-exec-8] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: ES appVersion: 100 tier: 2
-2026-02-01T00:35:32.710Z  INFO 32081 --- [nio-8080-exec-8] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}]
-2026-02-01T00:35:36.295Z  INFO 32081 --- [nio-8080-exec-9] n.i.r.engine.controller.FlagController   : Evaluating feature: old-checkout for country: IRL appVersion: 100 tier: gold
-2026-02-01T00:35:36.296Z  INFO 32081 --- [nio-8080-exec-9] n.i.r.engine.controller.FlagController   : Rules set for feature old-checkout is [Rule{attr='country', op='IN', values={0=IRL}}, Rule{attr='tier', op='IN', values={0=gold, 1=platinum}}]
-2026-02-01T00:35:39.909Z  INFO 32081 --- [io-8080-exec-10] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: PT appVersion: 140 tier: gold
-2026-02-01T00:35:39.910Z  INFO 32081 --- [io-8080-exec-10] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}, Rule{attr='appVersion', op='GTE', values={0=120}}, Rule{attr='tier', op='IN', values={0=gold, 1=platinum}}]
-2026-02-01T00:35:46.843Z  INFO 32081 --- [nio-8080-exec-2] n.i.r.engine.controller.FlagController   : Evaluating feature: search-v2 for country: PT appVersion: 140 tier: gold
-2026-02-01T00:35:46.843Z  WARN 32081 --- [nio-8080-exec-2] n.i.r.engine.controller.FlagController   : Feature search-v2 is not enabled.
+2026-02-01T00:38:38.753Z  INFO 32328 --- [           main] org.camunda.bpm.container                : ENGINE-08050 Process application apiApplication successfully deployed
+2026-02-01T00:38:38.756Z  INFO 32328 --- [           main] net.ironoc.rules.engine.ApiApplication   : Started ApiApplication in 6.908 seconds (process running for 7.483)
+2026-02-01T00:38:38.758Z  INFO 32328 --- [           main] org.camunda.bpm.engine.jobexecutor       : ENGINE-14014 Starting up the JobExecutor[org.camunda.bpm.engine.spring.components.jobexecutor.SpringJobExecutor].
+2026-02-01T00:38:38.759Z  INFO 32328 --- [ingJobExecutor]] org.camunda.bpm.engine.jobexecutor       : ENGINE-14018 JobExecutor[org.camunda.bpm.engine.spring.components.jobexecutor.SpringJobExecutor] starting to acquire jobs
+2026-02-01T00:38:45.926Z  INFO 32328 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-01T00:38:45.927Z  INFO 32328 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-01T00:38:45.928Z  INFO 32328 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-02-01T00:38:45.966Z  INFO 32328 --- [nio-8080-exec-1] n.i.r.engine.controller.FlagController   : Test yml value is: true
+2026-02-01T00:38:51.115Z  INFO 32328 --- [nio-8080-exec-4] n.i.rules.engine.service.RulesService    : Initialize rules from local features config
+2026-02-01T00:38:54.425Z  INFO 32328 --- [nio-8080-exec-5] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: IE appVersion: 1 tier: 2
+2026-02-01T00:38:54.431Z  WARN 32328 --- [nio-8080-exec-5] n.i.r.engine.controller.FlagController   : Rules did not match for feature new-checkout
+2026-02-01T00:39:00.610Z  INFO 32328 --- [nio-8080-exec-2] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: PT appVersion: 120 tier: 2
+2026-02-01T00:39:00.610Z  INFO 32328 --- [nio-8080-exec-2] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}, Rule{attr='appVersion', op='GTE', values={0=120}}]
+2026-02-01T00:39:04.963Z  INFO 32328 --- [nio-8080-exec-7] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: ES appVersion: 400 tier: 2
+2026-02-01T00:39:04.963Z  INFO 32328 --- [nio-8080-exec-7] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}, Rule{attr='appVersion', op='GTE', values={0=120}}]
+2026-02-01T00:39:08.508Z  INFO 32328 --- [nio-8080-exec-8] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: ES appVersion: 100 tier: 2
+2026-02-01T00:39:08.509Z  INFO 32328 --- [nio-8080-exec-8] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}]
+2026-02-01T00:39:12.331Z  INFO 32328 --- [nio-8080-exec-9] n.i.r.engine.controller.FlagController   : Evaluating feature: old-checkout for country: IRL appVersion: 100 tier: gold
+2026-02-01T00:39:12.331Z  INFO 32328 --- [nio-8080-exec-9] n.i.r.engine.controller.FlagController   : Rules set for feature old-checkout is [Rule{attr='country', op='IN', values={0=IRL}}, Rule{attr='tier', op='IN', values={0=gold, 1=platinum}}]
+2026-02-01T00:39:16.567Z  INFO 32328 --- [io-8080-exec-10] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: PT appVersion: 140 tier: gold
+2026-02-01T00:39:16.568Z  INFO 32328 --- [io-8080-exec-10] n.i.r.engine.controller.FlagController   : Rules set for feature new-checkout is [Rule{attr='country', op='IN', values={0=ES, 1=PT}}, Rule{attr='appVersion', op='GTE', values={0=120}}, Rule{attr='tier', op='IN', values={0=gold, 1=platinum}}]
+2026-02-01T00:39:20.069Z  INFO 32328 --- [nio-8080-exec-3] n.i.r.engine.controller.FlagController   : Evaluating feature: search-v2 for country: PT appVersion: 140 tier: gold
+2026-02-01T00:39:20.069Z  WARN 32328 --- [nio-8080-exec-3] n.i.r.engine.controller.FlagController   : Feature search-v2 is not enabled.
 ```
