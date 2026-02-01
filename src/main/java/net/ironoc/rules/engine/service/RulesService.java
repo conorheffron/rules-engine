@@ -60,16 +60,17 @@ public class RulesService implements JavaDelegate {
                 Rule rule = this.objectMapper.convertValue(ruleMap, Rule.class);
                 RuleOperator ruleOperator = RuleOperator.fromStr(rule.op());
                 // validate features (check for matching rules)
-                validateStringMatch(country, rule, ruleOperator, ruleMatch);
+                validateStringMatch(country, rule, ruleOperator, ruleMatch, FeatureType.COUNTRY);
                 validateAppVersionMatch(appVersion, rule, ruleOperator, ruleMatch);
-                validateStringMatch(tier, rule, ruleOperator, ruleMatch);
+                validateStringMatch(tier, rule, ruleOperator, ruleMatch, FeatureType.TIER);
             }
         }
         return ruleMatch;
     }
 
-    private void validateStringMatch(String inputStr, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
-        if (rule.attr().equalsIgnoreCase(FeatureType.TIER.name())) {
+    private void validateStringMatch(String inputStr, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch,
+                                     FeatureType featureType) {
+        if (rule.attr().equalsIgnoreCase(featureType.name())) {
             switch (ruleOperator) {
                 case RuleOperator.IN:
                 case RuleOperator.EQ:

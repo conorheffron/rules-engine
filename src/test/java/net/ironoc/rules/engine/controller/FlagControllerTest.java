@@ -29,8 +29,7 @@ class FlagControllerTest {
     }
 
     private static FlagController controllerWith(RulesService service) {
-        Environment env = mock(Environment.class); // not used by evaluateFlags()
-        return new FlagController(env, service, objectMapper());
+        return new FlagController(service, objectMapper());
     }
 
     @Test

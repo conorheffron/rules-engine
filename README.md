@@ -207,7 +207,6 @@ Deployment does not provide any case definitions.
 2026-02-01T00:46:21.699Z  INFO 33208 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2026-02-01T00:46:21.699Z  INFO 33208 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2026-02-01T00:46:21.700Z  INFO 33208 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2026-02-01T00:46:21.745Z  INFO 33208 --- [nio-8080-exec-2] n.i.r.engine.controller.FlagController   : Test yml value is: true
 2026-02-01T00:46:26.300Z  INFO 33208 --- [nio-8080-exec-3] n.i.rules.engine.service.RulesService    : Initialize rules from local features config
 2026-02-01T00:46:30.393Z  INFO 33208 --- [nio-8080-exec-4] n.i.r.engine.controller.FlagController   : Evaluating feature: new-checkout for country: IE appVersion: 1 tier: 2
 2026-02-01T00:46:30.397Z  WARN 33208 --- [nio-8080-exec-4] n.i.r.engine.controller.FlagController   : Rules did not match for feature new-checkout
