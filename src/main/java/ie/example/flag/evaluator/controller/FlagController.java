@@ -74,7 +74,7 @@ public class FlagController {
                 return createResponseFromMatches(feature, allRuleMatch, anyRuleMatch);
             }
         }
-
+        LOGGER.warn("Feature {} is not enabled.", feature);
         return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
     }
 
