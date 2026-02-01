@@ -15,7 +15,6 @@ import org.camunda.bpm.engine.runtime.ProcessInstantiationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,26 +26,19 @@ public class FlagController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlagController.class);
 
-    public static final String FEATURE_NEW_CHECKOUT_ENABLED = "feature.new-checkout.enabled";
-
-    private final Environment environment;
-
     private final RulesService rulesService;
 
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public FlagController(Environment environment,
-                          RulesService rulesService,
+    public FlagController(RulesService rulesService,
                           ObjectMapper objectMapper) {
-        this.environment = environment;
         this.rulesService = rulesService;
         this.objectMapper = objectMapper;
     }
 
     @GetMapping(value = "api/test")
     ResponseEntity<TestApiResponse> testApiCall() {
-        LOGGER.info("Test yml value is: {}", environment.getProperty(FEATURE_NEW_CHECKOUT_ENABLED));
         return ResponseEntity.ok().body(new TestApiResponse(Arrays.stream(Country.values()).map(Enum::name).toList()));
     }
 
