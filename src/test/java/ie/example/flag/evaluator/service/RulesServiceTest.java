@@ -1,6 +1,5 @@
 package ie.example.flag.evaluator.service;
 
-
 import module java.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +33,7 @@ class RulesServiceTest {
                 )
         );
 
-        List<Rule> matches = service.rulesMatcher("new-checkout", "ES", "10", "FREE", rules);
+        List<Rule> matches = service.rulesMatcher("ES", "10", "FREE", rules);
 
         assertEquals(1, matches.size());
         assertEquals(FeatureType.COUNTRY.name(), matches.getFirst().attr());
@@ -53,7 +52,7 @@ class RulesServiceTest {
                 )
         );
 
-        List<Rule> matches = service.rulesMatcher("new-checkout", "ES", "12", "FREE", rules);
+        List<Rule> matches = service.rulesMatcher("ES", "12", "FREE", rules);
 
         assertEquals(1, matches.size());
         assertEquals(FeatureType.APPVERSION.name(), matches.getFirst().attr());
@@ -72,7 +71,7 @@ class RulesServiceTest {
                 )
         );
 
-        List<Rule> matches = service.rulesMatcher("new-checkout", "ES", "12", "FREE", rules);
+        List<Rule> matches = service.rulesMatcher("ES", "12", "FREE", rules);
 
         assertTrue(matches.isEmpty());
     }

@@ -69,42 +69,46 @@ public class FlagController {
         LOGGER.info("Evaluating feature: {} for country: {} appVersion: {} tier: {}", feature, country, appVersion, tier);
         if (ft != null && ft.enabled()) {
             if (ft.ruleGroups() != null) {
-                List<Rule> allRuleMatch = getAllRuleMatch(feature, country, appVersion, tier, ft);
-                List<Rule> anyRuleMatch = getAnyRuleMatch(feature, country, appVersion, tier, ft);
-                return createResponseFromMatches(allRuleMatch, anyRuleMatch);
+                List<Rule> allRuleMatch = getAllRuleMatch(country, appVersion, tier, ft);
+                List<Rule> anyRuleMatch = getAnyRuleMatch(country, appVersion, tier, ft);
+                return createResponseFromMatches(feature, allRuleMatch, anyRuleMatch);
             }
         }
 
         return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
     }
 
-    private ResponseEntity<ApiResponse> createResponseFromMatches(List<Rule> allRuleMatch, List<Rule> anyRuleMatch) {
+    private ResponseEntity<ApiResponse> createResponseFromMatches(String feature,
+                                                                  List<Rule> allRuleMatch,
+                                                                  List<Rule> anyRuleMatch) {
         if (allRuleMatch.isEmpty() && anyRuleMatch.isEmpty()) {
             // no match
+            LOGGER.warn("Rules did not match for feature {}", feature);
             return ResponseEntity.badRequest().body(new ApiResponse(Collections.emptyList()));
         } else {
             // direct match(es)
             List<Rule> ruleMatch = new ArrayList<>();
             ruleMatch.addAll(allRuleMatch);
             ruleMatch.addAll(anyRuleMatch);
+            LOGGER.info("Rules set for feature {} is {}", feature, ruleMatch);
             return ResponseEntity.ok().body(new ApiResponse(ruleMatch));
         }
     }
 
-    private List<Rule> getAnyRuleMatch(String feature, String country, String appVersion, String tier, Feature ft) {
+    private List<Rule> getAnyRuleMatch(String country, String appVersion, String tier, Feature ft) {
         List<Rule> anyRuleMatch;
         Map<String, Map<String, Object>> featureAnyRules = objectMapper
                 .convertValue(ft.ruleGroups().any(), Map.class);
-        anyRuleMatch = rulesService.rulesMatcher(feature, country,
+        anyRuleMatch = rulesService.rulesMatcher(country,
                 appVersion, tier, featureAnyRules);
         return anyRuleMatch;
     }
 
-    private List<Rule> getAllRuleMatch(String feature, String country, String appVersion, String tier, Feature ft) {
+    private List<Rule> getAllRuleMatch(String country, String appVersion, String tier, Feature ft) {
         List<Rule> allRuleMatch;
         Map<String, Map<String, Object>> featureAllRules = objectMapper
                 .convertValue(ft.ruleGroups().all(), Map.class);
-        allRuleMatch = rulesService.rulesMatcher(feature, country,
+        allRuleMatch = rulesService.rulesMatcher(country,
                 appVersion, tier, featureAllRules);
         return allRuleMatch;
     }

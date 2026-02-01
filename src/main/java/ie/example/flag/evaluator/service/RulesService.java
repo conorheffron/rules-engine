@@ -52,14 +52,12 @@ public class RulesService implements JavaDelegate {
         }
     }
 
-    public List<Rule> rulesMatcher(String feature, String country, String appVersion, String tier,
+    public List<Rule> rulesMatcher(String country, String appVersion, String tier,
                                    Map<String, Map<String, Object>> featureAllRules) {
         List<Rule> ruleMatch = new ArrayList<>();
         if (featureAllRules != null && !featureAllRules.isEmpty()) {
             for (Map<String, Object> ruleMap : featureAllRules.values()) {
                 Rule rule = this.objectMapper.convertValue(ruleMap, Rule.class);
-                LOGGER.info("----------: Rule info for feature set {} is {}", feature, rule.toString());
-
                 RuleOperator ruleOperator = RuleOperator.fromStr(rule.op());
                 // validate features (check for matching rules)
                 validateCountryMatch(country, rule, ruleOperator, ruleMatch);
