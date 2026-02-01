@@ -68,7 +68,7 @@ public class RulesService implements JavaDelegate {
         return ruleMatch;
     }
 
-    private static void validateStringMatch(String inputStr, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
+    private void validateStringMatch(String inputStr, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
         if (rule.attr().equalsIgnoreCase(FeatureType.TIER.name())) {
             switch (ruleOperator) {
                 case RuleOperator.IN:
@@ -84,7 +84,7 @@ public class RulesService implements JavaDelegate {
         }
     }
 
-    private static void validateAppVersionMatch(String appVersion, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
+    private void validateAppVersionMatch(String appVersion, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
         if (rule.attr().equalsIgnoreCase(FeatureType.APPVERSION.name())) {
             switch (ruleOperator) {
                 case RuleOperator.GTE:
