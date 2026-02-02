@@ -46,7 +46,9 @@ Camunda:
     default-serialization-format: application/json
     generic-properties:
       properties:
-        historyTimeToLive: 5
+        historyTimeToLive: 5 # days
+    history-level: full
+
 server:
   error:
     whitelabel:

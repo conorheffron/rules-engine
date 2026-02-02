@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_03b26qx" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.43.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.24.0">
+  <bpmn2:process id="Rules_matcher" name="Rules Matcher Workflow (In Progress)" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>Flow_0n76me4</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:serviceTask id="Activity_1wplx4t" name="rules-init" camunda:class="net.ironoc.rules.engine.service.RulesService">
+      <bpmn2:incoming>Flow_0n76me4</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0gxw2it</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- Pause for Tasklist visibility -->
+    <bpmn2:userTask id="Activity_UserConfirmInit" name="Review rules-init output">
+      <bpmn2:incoming>Flow_0gxw2it</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_13pn36r</bpmn2:outgoing>
+    </bpmn2:userTask>
+
+    <!-- Determine featureEnabled + load rule context -->
+    <bpmn2:serviceTask id="Activity_1y4rlkn" name="Enabled" camunda:class="net.ironoc.rules.engine.delegate.FeatureEnabledDelegate">
+      <bpmn2:incoming>Flow_13pn36r</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_FeatureEnabled_To_Gateway</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- Deterministic routing: only one branch executes -->
+    <bpmn2:exclusiveGateway id="Gateway_0ejhppi" name="Feature Enabled?">
+      <bpmn2:incoming>Flow_FeatureEnabled_To_Gateway</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0jnvl6x</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0dqzjzh</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Enabled branch -->
+    <bpmn2:serviceTask id="Activity_0kshf1q" name="Application Version Available &#38; Supported?" camunda:class="net.ironoc.rules.engine.delegate.AppVersionDelegate">
+      <bpmn2:incoming>Flow_0jnvl6x</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_19rtbkb</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="Activity_0agz2v8" name="Tier / Subscription Level Valid for User?" camunda:class="net.ironoc.rules.engine.delegate.TierDelegate">
+      <bpmn2:incoming>Flow_19rtbkb</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_03tvbfd</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="Activity_0sdwngs" name="Country Code Valid / Supported?" camunda:class="net.ironoc.rules.engine.delegate.FeatureDelegate">
+      <bpmn2:incoming>Flow_03tvbfd</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0df9t6r</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- Disabled branch -->
+    <bpmn2:serviceTask id="Activity_0cmf8y3" name="Disabled" camunda:class="net.ironoc.rules.engine.delegate.FeatureDisabledDelegate">
+      <bpmn2:incoming>Flow_0dqzjzh</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_145ycy8</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="Activity_1d4sboi" name="Empty Rule Set (Do not process in rules engine)" camunda:class="net.ironoc.rules.engine.delegate.PassEngineDelegate">
+      <bpmn2:incoming>Flow_145ycy8</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0uxu6jl</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- Merge branches -->
+    <bpmn2:exclusiveGateway id="Gateway_MergeBeforeAggregator">
+      <bpmn2:incoming>Flow_0df9t6r</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0uxu6jl</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_MergeToAggregator</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="Activity_1pygerh" name="Return Rules Set" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:class="net.ironoc.rules.engine.delegate.RulesAggregatorDelegate">
+      <bpmn2:incoming>Flow_MergeToAggregator</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_ReturnToUserReview</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- NEW: pause after Return Rules Set so rulesJson stays visible before completion -->
+    <bpmn2:userTask id="Activity_UserReviewRulesJson" name="Review matched rules JSON">
+      <bpmn2:incoming>Flow_ReturnToUserReview</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_UserReviewToEnd</bpmn2:outgoing>
+    </bpmn2:userTask>
+
+    <bpmn2:endEvent id="Event_17e25ij">
+      <bpmn2:incoming>Flow_UserReviewToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <!-- Sequence flows -->
+    <bpmn2:sequenceFlow id="Flow_0n76me4" sourceRef="StartEvent_1" targetRef="Activity_1wplx4t" />
+    <bpmn2:sequenceFlow id="Flow_0gxw2it" sourceRef="Activity_1wplx4t" targetRef="Activity_UserConfirmInit" />
+
+    <bpmn2:sequenceFlow id="Flow_13pn36r" sourceRef="Activity_UserConfirmInit" targetRef="Activity_1y4rlkn" />
+    <bpmn2:sequenceFlow id="Flow_FeatureEnabled_To_Gateway" sourceRef="Activity_1y4rlkn" targetRef="Gateway_0ejhppi" />
+
+    <!-- Only one of these will be taken -->
+    <bpmn2:sequenceFlow id="Flow_0jnvl6x" sourceRef="Gateway_0ejhppi" targetRef="Activity_0kshf1q">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${featureEnabled}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_0dqzjzh" sourceRef="Gateway_0ejhppi" targetRef="Activity_0cmf8y3">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${!featureEnabled}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+
+    <bpmn2:sequenceFlow id="Flow_19rtbkb" sourceRef="Activity_0kshf1q" targetRef="Activity_0agz2v8" />
+    <bpmn2:sequenceFlow id="Flow_03tvbfd" sourceRef="Activity_0agz2v8" targetRef="Activity_0sdwngs" />
+    <bpmn2:sequenceFlow id="Flow_0df9t6r" sourceRef="Activity_0sdwngs" targetRef="Gateway_MergeBeforeAggregator" />
+
+    <bpmn2:sequenceFlow id="Flow_145ycy8" sourceRef="Activity_0cmf8y3" targetRef="Activity_1d4sboi" />
+    <bpmn2:sequenceFlow id="Flow_0uxu6jl" sourceRef="Activity_1d4sboi" targetRef="Gateway_MergeBeforeAggregator" />
+
+    <bpmn2:sequenceFlow id="Flow_MergeToAggregator" sourceRef="Gateway_MergeBeforeAggregator" targetRef="Activity_1pygerh" />
+
+    <!-- UPDATED: service task -> new user task -> end -->
+    <bpmn2:sequenceFlow id="Flow_ReturnToUserReview" sourceRef="Activity_1pygerh" targetRef="Activity_UserReviewRulesJson" />
+    <bpmn2:sequenceFlow id="Flow_UserReviewToEnd" sourceRef="Activity_UserReviewRulesJson" targetRef="Event_17e25ij" />
+
+    <bpmn2:dataStoreReference id="DataStoreReference_1jfhnc8" />
+
+    <bpmn2:textAnnotation id="TextAnnotation_039z1qx">
+      <bpmn2:text>Return Rule Set JSON</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_1d0mxhd" associationDirection="None" sourceRef="Event_17e25ij" targetRef="TextAnnotation_039z1qx" />
+
+    <bpmn2:textAnnotation id="TextAnnotation_1kj11cm">
+      <bpmn2:text>Trigger API GET Request</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_0qlh6fo" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_1kj11cm" />
+
+    <bpmn2:group id="Group_1w8jrmo" />
+
+    <bpmn2:textAnnotation id="TextAnnotation_0dd5ibk">
+      <bpmn2:text>Pre-configured YAML with rules (Attribute, Operator, &amp; Values)</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_08d24lw" associationDirection="None" sourceRef="DataStoreReference_1jfhnc8" targetRef="TextAnnotation_0dd5ibk" />
+
+    <bpmn2:textAnnotation id="TextAnnotation_1ro3zy5">
+      <bpmn2:text>Feature Enabled?</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_0r39hnl" associationDirection="None" sourceRef="Gateway_0ejhppi" targetRef="TextAnnotation_1ro3zy5" />
+  </bpmn2:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Rules_matcher">
+      <bpmndi:BPMNShape id="Activity_0sdwngs_di" bpmnElement="Activity_0sdwngs">
+        <dc:Bounds x="1040" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0agz2v8_di" bpmnElement="Activity_0agz2v8">
+        <dc:Bounds x="920" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kshf1q_di" bpmnElement="Activity_0kshf1q">
+        <dc:Bounds x="800" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_1jfhnc8_di" bpmnElement="DataStoreReference_1jfhnc8">
+        <dc:Bounds x="1185" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1y4rlkn_di" bpmnElement="Activity_1y4rlkn">
+        <dc:Bounds x="670" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_MergeBeforeAggregator_di" bpmnElement="Gateway_MergeBeforeAggregator" isMarkerVisible="true">
+        <dc:Bounds x="1165" y="545" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pygerh_di" bpmnElement="Activity_1pygerh">
+        <dc:Bounds x="1300" y="533" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+
+      <!-- NEW: user task after Return Rules Set -->
+      <bpmndi:BPMNShape id="Activity_UserReviewRulesJson_di" bpmnElement="Activity_UserReviewRulesJson">
+        <dc:Bounds x="1420" y="533" width="170" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+
+      <!-- Move end event right a bit so it doesn't overlap -->
+      <bpmndi:BPMNShape id="Event_17e25ij_di" bpmnElement="Event_17e25ij">
+        <dc:Bounds x="1610" y="555" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Activity_1d4sboi_di" bpmnElement="Activity_1d4sboi">
+        <dc:Bounds x="920" y="530" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0cmf8y3_di" bpmnElement="Activity_0cmf8y3">
+        <dc:Bounds x="740" y="530" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_UserConfirmInit_di" bpmnElement="Activity_UserConfirmInit">
+        <dc:Bounds x="480" y="340" width="140" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gateway_0op5atc_di" bpmnElement="Gateway_0ejhppi">
+        <dc:Bounds x="525" y="481" width="50" height="50" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Activity_1wplx4t_di" bpmnElement="Activity_1wplx4t">
+        <dc:Bounds x="340" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="199" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Association_1d0mxhd_di" bpmnElement="Association_1d0mxhd">
+        <di:waypoint x="1628" y="555" />
+        <di:waypoint x="1520" y="511" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_08d24lw_di" bpmnElement="Association_08d24lw">
+        <di:waypoint x="1235" y="161" />
+        <di:waypoint x="1270" y="134" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0r39hnl_di" bpmnElement="Association_0r39hnl">
+        <di:waypoint x="526" y="505" />
+        <di:waypoint x="480" y="506" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0qlh6fo_di" bpmnElement="Association_0qlh6fo">
+        <di:waypoint x="217" y="362" />
+        <di:waypoint x="217" y="301" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNShape id="TextAnnotation_1kj11cm_di" bpmnElement="TextAnnotation_1kj11cm">
+        <dc:Bounds x="170" y="260" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Flow_13pn36r_di" bpmnElement="Flow_13pn36r">
+        <di:waypoint x="620" y="380" />
+        <di:waypoint x="670" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n76me4_di" bpmnElement="Flow_0n76me4">
+        <di:waypoint x="235" y="380" />
+        <di:waypoint x="340" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gxw2it_di" bpmnElement="Flow_0gxw2it">
+        <di:waypoint x="440" y="380" />
+        <di:waypoint x="480" y="380" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_FeatureEnabled_To_Gateway_di" bpmnElement="Flow_FeatureEnabled_To_Gateway">
+        <di:waypoint x="720" y="420" />
+        <di:waypoint x="720" y="506" />
+        <di:waypoint x="575" y="506" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_0jnvl6x_di" bpmnElement="Flow_0jnvl6x">
+        <di:waypoint x="575" y="506" />
+        <di:waypoint x="575" y="380" />
+        <di:waypoint x="800" y="380" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_0dqzjzh_di" bpmnElement="Flow_0dqzjzh">
+        <di:waypoint x="550" y="531" />
+        <di:waypoint x="550" y="570" />
+        <di:waypoint x="740" y="570" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_19rtbkb_di" bpmnElement="Flow_19rtbkb">
+        <di:waypoint x="900" y="380" />
+        <di:waypoint x="920" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03tvbfd_di" bpmnElement="Flow_03tvbfd">
+        <di:waypoint x="1020" y="380" />
+        <di:waypoint x="1040" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0df9t6r_di" bpmnElement="Flow_0df9t6r">
+        <di:waypoint x="1140" y="380" />
+        <di:waypoint x="1190" y="380" />
+        <di:waypoint x="1190" y="545" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_145ycy8_di" bpmnElement="Flow_145ycy8">
+        <di:waypoint x="840" y="570" />
+        <di:waypoint x="920" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uxu6jl_di" bpmnElement="Flow_0uxu6jl">
+        <di:waypoint x="1020" y="570" />
+        <di:waypoint x="1165" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_MergeToAggregator_di" bpmnElement="Flow_MergeToAggregator">
+        <di:waypoint x="1214" y="571" />
+        <di:waypoint x="1300" y="571" />
+      </bpmndi:BPMNEdge>
+
+      <!-- UPDATED: Return Rules Set -> Review JSON -> End -->
+      <bpmndi:BPMNEdge id="Flow_ReturnToUserReview_di" bpmnElement="Flow_ReturnToUserReview">
+        <di:waypoint x="1400" y="573" />
+        <di:waypoint x="1420" y="573" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_UserReviewToEnd_di" bpmnElement="Flow_UserReviewToEnd">
+        <di:waypoint x="1590" y="573" />
+        <di:waypoint x="1610" y="573" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Existing group/annotations (kept as-is) -->
+      <bpmndi:BPMNShape id="Group_1w8jrmo_di" bpmnElement="Group_1w8jrmo">
+        <dc:Bounds x="300" y="221" width="1150" height="569" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_039z1qx_di" bpmnElement="TextAnnotation_039z1qx">
+        <dc:Bounds x="1474" y="470" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0dd5ibk_di" bpmnElement="TextAnnotation_0dd5ibk">
+        <dc:Bounds x="1270" y="80" width="100" height="84" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1ro3zy5_di" bpmnElement="TextAnnotation_1ro3zy5">
+        <dc:Bounds x="380" y="485" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

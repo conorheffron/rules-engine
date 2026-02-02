@@ -18,7 +18,8 @@ class RulesServiceTest {
     private static RulesService newService() {
         Environment env = mock(Environment.class);
         ObjectMapper objectMapper = new ObjectMapper();
-        return new RulesService(env, objectMapper);
+        FeatureDetailService featureDetailService = new FeatureDetailService();
+        return new RulesService(env, objectMapper, featureDetailService);
     }
 
     @Test
