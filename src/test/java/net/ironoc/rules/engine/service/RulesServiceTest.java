@@ -4,7 +4,7 @@ import module java.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ironoc.rules.engine.dto.Rule;
-import net.ironoc.rules.engine.enums.FeatureType;
+import net.ironoc.rules.engine.enums.FeatureFlag;
 import net.ironoc.rules.engine.enums.RuleOperator;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.Environment;
