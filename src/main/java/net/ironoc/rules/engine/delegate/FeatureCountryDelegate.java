@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-public class FeatureCountryDelegate implements JavaDelegate {
+public class CountryDelegate implements JavaDelegate {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FeatureDelegate.class);
 
