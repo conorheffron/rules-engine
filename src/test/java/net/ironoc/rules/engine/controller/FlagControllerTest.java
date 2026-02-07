@@ -111,7 +111,7 @@ class FlagControllerTest {
         assertNotNull(response.getBody());
         assertEquals(2, response.getBody().rules().size());
 
-        assertTrue(response.getBody().rules().stream().anyMatch(r -> FeatureType.COUNTRY.name().equalsIgnoreCase(r.attr())));
-        assertTrue(response.getBody().rules().stream().anyMatch(r -> FeatureType.TIER.name().equalsIgnoreCase(r.attr())));
+        assertTrue(response.getBody().rules().stream().anyMatch(r -> FeatureFlag.COUNTRY.name().equalsIgnoreCase(r.attr())));
+        assertTrue(response.getBody().rules().stream().anyMatch(r -> FeatureFlag.TIER.name().equalsIgnoreCase(r.attr())));
     }
 }
