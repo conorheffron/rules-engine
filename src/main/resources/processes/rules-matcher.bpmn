@@ -40,7 +40,7 @@
       <bpmn2:outgoing>Flow_03tvbfd</bpmn2:outgoing>
     </bpmn2:serviceTask>
 
-    <bpmn2:serviceTask id="Activity_0sdwngs" name="Country Code Valid / Supported?" camunda:class="net.ironoc.rules.engine.delegate.FeatureDelegate">
+    <bpmn2:serviceTask id="Activity_0sdwngs" name="Country Code Valid / Supported?" camunda:class="net.ironoc.rules.engine.delegate.CountryDelegate">
       <bpmn2:incoming>Flow_03tvbfd</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0df9t6r</bpmn2:outgoing>
     </bpmn2:serviceTask>
