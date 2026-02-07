@@ -49,7 +49,7 @@ public class RulesAggregatorDelegate implements JavaDelegate {
         if (skip || !featureEnabled) {
             matchedRules = new ArrayList<>();
         } else {
-            String country = Objects.toString(execution.getVariable(FeatureDelegate.VAR_COUNTRY), "").trim();
+            String country = Objects.toString(execution.getVariable(CountryDelegate.VAR_COUNTRY), "").trim();
             String appVersion = Objects.toString(execution.getVariable(AppVersionDelegate.VAR_APP_VERSION), "").trim();
             String tier = Objects.toString(execution.getVariable(TierDelegate.VAR_TIER), "").trim();
 
