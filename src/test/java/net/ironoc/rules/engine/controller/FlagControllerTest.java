@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ironoc.rules.engine.domain.ApiResponse;
 import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.RuleGroups;
-import net.ironoc.rules.engine.enums.FeatureType;
+import net.ironoc.rules.engine.enums.FeatureFlag;
 import net.ironoc.rules.engine.service.FeatureDetailService;
 import net.ironoc.rules.engine.service.RulesService;
 import org.camunda.bpm.engine.RuntimeService;
