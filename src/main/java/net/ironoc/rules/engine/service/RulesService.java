@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ironoc.rules.engine.domain.ApiResponse;
 import net.ironoc.rules.engine.dto.Feature;
 import net.ironoc.rules.engine.dto.Rule;
-import net.ironoc.rules.engine.enums.FeatureType;
+import net.ironoc.rules.engine.enums.FeatureFlag;
 import net.ironoc.rules.engine.enums.RuleGroup;
 import net.ironoc.rules.engine.enums.RuleOperator;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -93,16 +93,16 @@ public class RulesService implements RuleServiceI {
                 Rule rule = this.objectMapper.convertValue(ruleMap, Rule.class);
                 RuleOperator ruleOperator = RuleOperator.fromStr(rule.op());
                 // validate features (check for matching rules)
-                validateStringMatch(country, rule, ruleOperator, ruleMatch, FeatureType.COUNTRY);
+                validateStringMatch(country, rule, ruleOperator, ruleMatch, FeatureFlag.COUNTRY);
                 validateAppVersionMatch(appVersion, rule, ruleOperator, ruleMatch);
-                validateStringMatch(tier, rule, ruleOperator, ruleMatch, FeatureType.TIER);
+                validateStringMatch(tier, rule, ruleOperator, ruleMatch, FeatureFlag.TIER);
             }
         }
         return ruleMatch;
     }
 
     private void validateStringMatch(String inputStr, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch,
-                                     FeatureType featureType) {
+                                     FeatureFlag featureType) {
         if (rule.attr().equalsIgnoreCase(featureType.name())) {
             switch (ruleOperator) {
                 case RuleOperator.IN:
@@ -119,7 +119,7 @@ public class RulesService implements RuleServiceI {
     }
 
     private void validateAppVersionMatch(String appVersion, Rule rule, RuleOperator ruleOperator, List<Rule> ruleMatch) {
-        if (rule.attr().equalsIgnoreCase(FeatureType.APPVERSION.name())) {
+        if (rule.attr().equalsIgnoreCase(FeatureFlag.APPVERSION.name())) {
             switch (ruleOperator) {
                 case RuleOperator.GTE:
                 case RuleOperator.GT:

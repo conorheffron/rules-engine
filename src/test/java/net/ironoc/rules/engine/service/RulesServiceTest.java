@@ -4,7 +4,7 @@ import module java.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ironoc.rules.engine.dto.Rule;
-import net.ironoc.rules.engine.enums.FeatureType;
+import net.ironoc.rules.engine.enums.FeatureFlag;
 import net.ironoc.rules.engine.enums.RuleOperator;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.Environment;
@@ -37,7 +37,7 @@ class RulesServiceTest {
         List<Rule> matches = service.rulesMatcher("ES", "10", "FREE", rules);
 
         assertEquals(1, matches.size());
-        assertEquals(FeatureType.COUNTRY.name(), matches.getFirst().attr());
+        assertEquals(FeatureFlag.COUNTRY.name(), matches.getFirst().attr());
         assertEquals(RuleOperator.IN.name(), matches.getFirst().op());
     }
 
@@ -56,7 +56,7 @@ class RulesServiceTest {
         List<Rule> matches = service.rulesMatcher("ES", "12", "FREE", rules);
 
         assertEquals(1, matches.size());
-        assertEquals(FeatureType.APPVERSION.name(), matches.getFirst().attr());
+        assertEquals(FeatureFlag.APPVERSION.name(), matches.getFirst().attr());
         assertEquals(RuleOperator.GTE.name(), matches.getFirst().op());
     }
 

@@ -1,6 +1,6 @@
 package net.ironoc.rules.engine.enums;
 
-public enum FeatureType {
+public enum FeatureFlag {
 
     TIER, APPVERSION, COUNTRY
 }

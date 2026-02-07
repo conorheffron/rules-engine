@@ -25,6 +25,6 @@ public class ApiApplication {
 
     @EventListener
     public void processPostDeploy(PostDeployEvent event) {
-        runtimeService.startProcessInstanceByKey("loanApproval");
+        runtimeService.startProcessInstanceByKey("Rules_matcher");
     }
 }

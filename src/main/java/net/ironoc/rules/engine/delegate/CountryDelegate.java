@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-public class FeatureDelegate implements JavaDelegate {
+public class CountryDelegate implements JavaDelegate {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FeatureDelegate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryDelegate.class);
 
     public static final String VAR_COUNTRY = "country";
 
