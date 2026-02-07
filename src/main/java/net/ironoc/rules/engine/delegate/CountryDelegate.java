@@ -11,7 +11,7 @@ import java.util.Objects;
 @Component
 public class CountryDelegate implements JavaDelegate {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FeatureDelegate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryDelegate.class);
 
     public static final String VAR_COUNTRY = "country";
 
