@@ -22,7 +22,7 @@ Below is the conceptual layout showing how API clients, the Spring core containe
 graph TD
     Client[API Client / Web Browser] -->|1. REST API Requests| Controller[FlagController]
     
-    subgraph Spring Boot Backend (Java 25)
+    subgraph Spring Boot Backend: Java 25
         Controller -->|2. Low-Latency Query & Evaluation| Cache[FeatureDetailService]
         Controller -->|3. Trigger Process Instance| Camunda[Camunda Process Engine]
         
