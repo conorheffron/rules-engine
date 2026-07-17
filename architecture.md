@@ -1,4 +1,5 @@
-# Feature Flag Evaluator - System Architecture & Design Documentation
+# rules-engine
+## Feature Flag Evaluator - System Architecture & Design Documentation
 
 ## Executive Summary
 The **Feature Flag Evaluator** is a modern, high-performance rules engine designed to determine whether specific feature flags are enabled or disabled for given target audiences. Built with **Spring Boot 3.5.x** and leveraging **Camunda Platform 7.24.0**, the system provides two distinct pathways: a sub-millisecond, low-latency API evaluation mechanism for real-time application requests, and an interactive BPMN workflow simulation path for workflow modeling, compliance, operator audit, and human-in-the-loop operational checks.
