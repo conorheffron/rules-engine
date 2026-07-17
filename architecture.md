@@ -21,7 +21,7 @@ Below is the conceptual layout showing how API clients, the Spring core containe
 graph TD
     Client[API Client / Web Browser] -->|1. REST API Requests| Controller[FlagController]
     
-    subgraph Spring Boot Backend: Java 25
+    subgraph Spring Boot Backend (Java 25)
         Controller -->|2. Low-Latency Query & Evaluation| Cache[FeatureDetailService]
         Controller -->|3. Trigger Process Instance| Camunda[Camunda Process Engine]
         
@@ -96,7 +96,86 @@ By relying on Java 16+ records (`Feature`, `RuleGroups`, `Rule`), the applicatio
 
 ---
 
-## 3. BPMN Workflow Orchestration: Deep Architectural Analysis
+## 3. Startup Rule-Loading & Manual Triggering Mechanics
+
+The system supports automatic bootstrapping of rules on system boot, alongside multiple operational pathways for manual execution, reloads, and configurations.
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│                             BOOTSTRAPPING & TRIGGERING PATHWAYS                           │
+│                                                                                            │
+│  [Startup Lifecycle]                                                                       │
+│          │                                                                                 │
+│          ▼                                                                                 │
+│   (PostDeployEvent) ──> [Auto-Trigger Rules_matcher Process] ──> [Memory Cache Loaded]     │
+│                                                                                            │
+│                                                                                            │
+│  [Operational Inputs]                                                                      │
+│          │                                                                                 │
+│          ├─► (REST Endpoint GET /api/executetask) ────────┐                                │
+│          │                                                ├─► [Trigger Rules_matcher]      │
+│          ├─► (Camunda REST API: /process-definition/...) ─┘                                │
+│          │                                                                                 │
+│          └─► (Camunda Tasklist UI) ─────────────────────────► [Interactively Run Process]  │
+└────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### A. Automatic Rule-Loading on Startup
+To ensure that rule evaluations are ready for immediate consumption upon application launch, the system implements an automated deployment-event listener:
+
+1. **Camunda Deployment Completion:** As the Spring Boot container starts, the embedded Camunda Process Engine loads, registers, and deploys the BPMN files found inside `src/main/resources/processes/` (such as `rules-matcher.bpmn`).
+2. **Post-Deployment Lifecycle Interception:** Under `ApiApplication.java`, a Spring-managed event listener intercepts the deployment phase using the `@EventListener` annotation bound to Camunda's `PostDeployEvent`:
+   ```java
+   @EventListener
+   public void processPostDeploy(PostDeployEvent event) {
+       runtimeService.startProcessInstanceByKey("Rules_matcher");
+   }
+   ```
+3. **Execution Kick-off:** Immediately upon receiving the `PostDeployEvent`, Camunda starts an instance of the `Rules_matcher` process in the background.
+4. **Cache Initialization:** The newly created process instance immediately moves to its first executable node: **Service Task `rules-init`** (linked to `RulesService`). This service task executes `RulesService.execute(...)`, programmatically binds the rules prefix `feature` configurations directly from `application.yml`, and populates the `FeatureDetailService` in-memory concurrency cache.
+5. **Interactive Pause State:** The process then advances to the User Task **`Activity_UserConfirmInit` ("Review rules-init output")**, parking a token there for manual operator validation in the Camunda Tasklist, concluding the startup bootstrap safely.
+
+### B. Manual Rule-Loading & Workflow Triggering Options
+When configurations change in real-time, or operators need to run manual verification loops, they can trigger rule loading through three pathways:
+
+#### Pathway 1: Dedicated REST Trigger (`GET /api/executetask`)
+Designed for testing, programmatic refreshes, and quick re-trigger loops:
+* Calling `http://localhost:8080/api/executetask` targets the `FlagController`.
+* The controller leverages Camunda's `RuntimeService` to start a new instance of the process key `"Rules_matcher"` and retrieves process variables synchronously upon execution:
+  ```java
+  ProcessInstanceWithVariables result = runtimeService
+          .createProcessInstanceByKey("Rules_matcher")
+          .executeWithVariablesInReturn();
+  ```
+* This triggers a clean execution of the `rules-init` delegate, rebuilding the concurrent map cache with updated environment values, and registers a new tracking token in the engine.
+
+#### Pathway 2: Camunda Engine REST API
+Enterprise orchestration platforms or external CD pipelines can manually trigger a rule execution flow using Camunda’s native REST interface:
+* **HTTP Endpoint:** `POST http://localhost:8080/engine-rest/process-definition/key/Rules_matcher/start`
+* **Content-Type:** `application/json`
+* **Payload Structure:** Allows variables to be loaded directly into execution memory for testing:
+  ```json
+  {
+    "variables": {
+      "feature": { "value": "new-checkout", "type": "String" },
+      "country": { "value": "ES", "type": "String" },
+      "appVersion": { "value": "130", "type": "String" },
+      "tier": { "value": "gold", "type": "String" }
+    }
+  }
+  ```
+
+#### Pathway 3: Camunda Tasklist Web UI
+Operators can visually trigger manual execution flows with custom, interactive values:
+1. Log into the Camunda Tasklist portal at `http://localhost:8080/app/tasklist/`.
+2. Click **"Start process"** in the top navigation panel.
+3. Select **"Rules Matcher Workflow (In Progress)"** from the list of deployed definitions.
+4. (Optional) Provide start variables directly in the generic process starter modal.
+5. Click **"Start"** to visually run the workflow token, inspect user tasks, complete review blocks, and trace matches interactively.
+
+---
+
+## 4. BPMN Workflow Orchestration: Deep Architectural Analysis
 
 The system relies on executable Business Process Model and Notation (BPMN 2.0) specifications deployed to the embedded Camunda engine. 
 
@@ -148,7 +227,7 @@ The Service Task **`Activity_1pygerh` ("Return Rules Set")** is configured with 
 
 ---
 
-## 4. Java Delegates: Deep-Dive Implementation & State Transitions
+## 5. Java Delegates: Deep-Dive Implementation & State Transitions
 
 Each service node in the `Rules_matcher` process is backed by a specific Java class implementing `org.camunda.bpm.engine.delegate.JavaDelegate`. These classes orchestrate process state transitions by reading, updating, and removing execution variables.
 
@@ -318,7 +397,7 @@ Below is an exhaustive account of each delegate's responsibilities, input/output
 
 ---
 
-## 5. Camunda Modeler and Console Usage
+## 6. Camunda Modeler and Console Usage
 
 The integration of Camunda provides a robust framework to visualize, monitor, audit, and walk through business rules interactively.
 
@@ -349,7 +428,7 @@ Controls user authentication, authorizations, and filter creation (e.g., configu
 
 ---
 
-## 6. Detailed Data Flow & Execution Lifecycles
+## 7. Detailed Data Flow & Execution Lifecycles
 
 The Feature Flag Evaluator supports two distinct execution paths depending on performance and audit requirements:
 
@@ -412,7 +491,7 @@ Designed for process tracing, visual auditing, and manual user checkpoints.
 
 ---
 
-## 7. Testing & Architectural Integrity
+## 8. Testing & Architectural Integrity
 
 The system guarantees robust operations via its comprehensive, self-contained test suite containing **9 distinct unit and integration tests** distributed across these target segments:
 
