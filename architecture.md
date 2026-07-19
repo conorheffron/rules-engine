@@ -133,7 +133,7 @@ The system supports automatic bootstrapping of rules on system boot, alongside m
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────┐
-│                             BOOTSTRAPPING & TRIGGERING PATHWAYS                           │
+│                             BOOTSTRAPPING & TRIGGERING PATHWAYS                            │
 │                                                                                            │
 │  [Startup Lifecycle]                                                                       │
 │          │                                                                                 │
@@ -321,7 +321,7 @@ Below is an exhaustive account of each delegate's responsibilities, input/output
 ┌────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                 RULES_MATCHER PROCESS                                      │
 │                                                                                            │
-│  [Start] ──> [rules-init]                                                                 │
+│  [Start] ──> [rules-init]                                                                  │
 │                   │                                                                        │
 │                   ▼                                                                        │
 │          (Task: Review rules-init)                                                         │
