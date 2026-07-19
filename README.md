@@ -4,6 +4,14 @@
 
 [![Java CI with Maven](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml/badge.svg)](https://github.com/conorheffron/rules-engine/actions/workflows/maven.yml)
 
+---
+
+> [!IMPORTANT]
+> ### 📘 Developer & Operations Architecture Guide
+> To read a deep dive into the system boundaries, Java 25 Spring backend components, custom Java Delegate execution lifecycle variables, automatic rules bootstrapping on application startup, and step-by-step Tasklist operator UX flows, see the [System Architecture Documentation](architecture.md).
+
+---
+
 # Proposed Design
  - The workflow should:
    - Read Rules from app configuration

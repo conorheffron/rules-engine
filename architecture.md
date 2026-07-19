@@ -1,41 +1,71 @@
-# rules-engine
-## Feature Flag Evaluator - System Architecture & Design Documentation
+# Feature Flag Evaluator - System Architecture & Design Documentation
 
 ## Executive Summary
 The **Feature Flag Evaluator** is a modern, high-performance rules engine designed to determine whether specific feature flags are enabled or disabled for given target audiences. Built with **Spring Boot 3.5.x** and leveraging **Camunda Platform 7.24.0**, the system provides two distinct pathways: a sub-millisecond, low-latency API evaluation mechanism for real-time application requests, and an interactive BPMN workflow simulation path for workflow modeling, compliance, operator audit, and human-in-the-loop operational checks.
 
 ---
 
-## 1. High-Level System Architecture
+## 1. Detailed System Design & Boundaries
 
-The application is structured into four core architectural tiers:
-1. **API / Controller Layer:** Handles HTTP request ingestion, exposing REST endpoints for flag status evaluation, verification, and BPMN process triggering.
-2. **Process Orchestration Layer (Camunda Engine):** Operates an embedded BPMN workflow engine that runs structured business logic, maintains run-time execution contexts, tracks execution states, and assigns tasks to operations personnel.
-3. **Core Service & Memory-Cache Layer:** Reads rules from yaml properties, binds them into typed objects, executes matching algorithms, and caches configurations in-memory to provide lightning-fast, concurrent flag resolutions.
-4. **Storage Layer:** Uses an embedded H2 file database, managed via Hibernate JPA, to persist Camunda process states, history log entries, task variables, and operational configurations.
+The application is structured into clearly bounded layers. Communication between the user browser, the Spring core container, the Camunda embedded workflow engine, and the persistent storage database is mapped in the diagram below:
 
-### Architectural Blueprint (System Diagram)
-
-Below is the conceptual layout showing how API clients, the Spring core container, the Camunda Process Engine, and the local storage layer interact:
+### Detailed System Design Component Diagram
 
 ```mermaid
-graph TD
-    Client[API Client / Web Browser] -->|1. REST API Requests| Controller[FlagController]
-    
-    subgraph Spring Boot Backend: Java 25
-        Controller -->|2. Low-Latency Query & Evaluation| Cache[FeatureDetailService]
-        Controller -->|3. Trigger Process Instance| Camunda[Camunda Process Engine]
-        
-        Camunda -->|4. Run Delegated Logic| Delegates[Java Delegates Layer]
-        Delegates -->|5. Evaluate & Load Rules| RulesService[RulesService]
-        RulesService -->|6. Cache Put/Get| Cache
-        
-        RulesService -->|7. Bind Configuration| Properties[Spring Core Environment / application.yml]
+graph TB
+    subgraph Client Layer
+        Browser[Web Browser / API Client]
+        Modeler[Camunda Modeler]
     end
-    
-    subgraph Storage Layer
-        Camunda -->|8. State Persistence & Audit History| H2[(H2 Database / camunda-h2-database)]
+
+    subgraph Flag Evaluator Spring Boot Application Boundary
+        subgraph REST API Controller Layer
+            FC[FlagController]
+            JerseyREST[Camunda Jersey REST Servlet]
+        end
+
+        subgraph Spring Managed Business Context
+            RulesService[RulesService <br> - Reads YAML Feature Config <br> - Implements Rule Evaluation]
+            Cache[FeatureDetailService <br> - Concurrent In-Memory Cache <br> - Thread-Safe Map]
+            Jackson[JacksonConfig <br> - Custom Serialization Mapping]
+        end
+
+        subgraph Embedded Camunda 7.24 Engine Layer
+            Runtime[RuntimeService <br> - Starts process instances]
+            TaskService[TaskService <br> - Manages User Tasks & Claims]
+            JobExec[SpringJobExecutor <br> - Handles asyncBefore/asyncAfter background jobs <br> - Thread Pool: 3-10 workers]
+            Deployer[BPMN Resource Deployer <br> - Deploys classpath:processes/*.bpmn]
+        end
+
+        subgraph Data & Persistence Infrastructure Layer
+            Hikari[HikariDataSource <br> - Connection Pool]
+            JPA[Hibernate JPA / Hibernate ORM]
+        end
     end
+
+    subgraph Database Storage Layer
+        H2[(H2 Local File DB <br> camunda-h2-database)]
+    end
+
+    %% Network & Interface Protocols
+    Browser -->|HTTP REST / JSON / api/eval| FC
+    Browser -->|HTTP REST / JSON / api/executetask| FC
+    Browser -->|HTTP REST / HTML / Web Console| JerseyREST
+    Modeler -->|BPMN 2.0 XML File Write| Deployer
+    
+    %% Engine & Service Wiring
+    FC -->|Java API: Query Cache| Cache
+    FC -->|Java API: Trigger Process| Runtime
+    Runtime -->|Service Delegation / JavaDelegate| RulesService
+    RulesService -->|Cache Writes| Cache
+    TaskService -->|Context Variables Read/Write| Hikari
+    JobExec -->|Async Job Thread| Runtime
+    
+    %% Storage connections
+    Hikari -->|JDBC Connections| H2
+    JPA -->|ORM Transactions| Hikari
+    Deployer -->|Saves Deployed XML Definitions| JPA
+    Runtime -->|Persists Token State| JPA
 ```
 
 ---
@@ -176,7 +206,60 @@ Operators can visually trigger manual execution flows with custom, interactive v
 
 ---
 
-## 4. BPMN Workflow Orchestration: Deep Architectural Analysis
+## 4. Operator UX Flow & Tasklist Lifecycle
+
+When manual testing or operations personnel execute, interact with, or audit the `Rules_matcher` workflow process, they navigate through a structured graphical interface. This end-to-end user experience flow across the Camunda Tasklist and Cockpit dashboards is detailed in the state chart below:
+
+### Operator UX Flow & Tasklist Lifecycle Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> Operator_Login : Access http://localhost:8080/
+    
+    state Operator_Login {
+        [*] --> Enter_Credentials : sa / passw
+        Enter_Credentials --> Dashboard_Redirect : Click Login
+    }
+
+    Dashboard_Redirect --> Camunda_Tasklist : Select Tasklist App
+    Dashboard_Redirect --> Camunda_Cockpit : Select Cockpit App
+    
+    state Camunda_Tasklist {
+        [*] --> Start_Process_Modal : Click "Start process"
+        Start_Process_Modal --> Select_Rules_Matcher : Select "Rules Matcher Workflow"
+        Select_Rules_Matcher --> Input_Start_Variables : (Optional) Input "feature", "country", etc.
+        Input_Start_Variables --> Process_Started : Click "Start"
+        
+        state Task_Lifecycle_Phase_1 {
+            Process_Started --> Fetch_Pending_Tasks : Apply "All tasks" Filter
+            Fetch_Pending_Tasks --> Claim_Init_Task : Select "Review rules-init output"
+            Claim_Init_Task --> View_Feature_Details : Inspect Process Variables
+            View_Feature_Details --> Complete_Init_Task : Click "Complete"
+        }
+        
+        state Task_Lifecycle_Phase_2 {
+            Complete_Init_Task --> Token_Routing_In_Engine : (System routes via Gateways & Delegates)
+            Token_Routing_In_Engine --> Fetch_New_Review_Task : Poll / Refresh list
+            Fetch_New_Review_Task --> Claim_Review_Task : Select "Review matched rules JSON"
+            Claim_Review_Task --> Inspect_rulesJson : View matched rules in serialized output
+            Inspect_rulesJson --> Complete_Review_Task : Click "Complete"
+        }
+        
+        Complete_Review_Task --> Process_Completed : Process Instance terminates
+    }
+
+    state Camunda_Cockpit {
+        [*] --> Navigate_Process_Definitions : Click "Processes"
+        Navigate_Process_Definitions --> Select_Rules_Matcher_Def : Click "Rules_matcher"
+        Select_Rules_Matcher_Def --> Inspect_Live_Tokens : View heat map / token locations
+        Inspect_Live_Tokens --> Inspect_Variables : View runtime process variable values
+        Inspect_Live_Tokens --> Inspect_Historic_Audit : Track completed delegates & paths taken
+    }
+```
+
+---
+
+## 5. BPMN Workflow Orchestration: Deep Architectural Analysis
 
 The system relies on executable Business Process Model and Notation (BPMN 2.0) specifications deployed to the embedded Camunda engine. 
 
@@ -223,12 +306,12 @@ BPMN user tasks represent operational safety checkpoints:
 
 #### 3. Asynchronous Execution Boundaries (`camunda:async`)
 The Service Task **`Activity_1pygerh` ("Return Rules Set")** is configured with `camunda:asyncBefore="true"` and `camunda:asyncAfter="true"`:
-* **`asyncBefore=true`:** Before entering the delegate, the engine commits the current database transaction. The execution thread is released back to the caller (e.g. the HTTP request), and a background job is scheduled. The Camunda Job Executor picks up the task and runs `RulesAggregatorDelegate` in a background worker thread.
+* **`asyncBefore=true`:** Before entering the delegate, the engine commits the current database transaction. The execution thread is released back to the caller (e.g. the HTTP request), and a background job is scheduled. The Camunda Job Executor picks up the task and run `RulesAggregatorDelegate` in a background worker thread.
 * **`asyncAfter=true`:** Immediately after the delegate completes its work, the engine commits the state variables and saves the updated matched rules back to the database, ensuring zero data loss before transitioning to the subsequent user task checkpoint.
 
 ---
 
-## 5. Java Delegates: Deep-Dive Implementation & State Transitions
+## 6. Java Delegates: Deep-Dive Implementation & State Transitions
 
 Each service node in the `Rules_matcher` process is backed by a specific Java class implementing `org.camunda.bpm.engine.delegate.JavaDelegate`. These classes orchestrate process state transitions by reading, updating, and removing execution variables.
 
@@ -398,7 +481,7 @@ Below is an exhaustive account of each delegate's responsibilities, input/output
 
 ---
 
-## 6. Camunda Modeler and Console Usage
+## 7. Camunda Modeler and Console Usage
 
 The integration of Camunda provides a robust framework to visualize, monitor, audit, and walk through business rules interactively.
 
@@ -429,7 +512,7 @@ Controls user authentication, authorizations, and filter creation (e.g., configu
 
 ---
 
-## 7. Detailed Data Flow & Execution Lifecycles
+## 8. Detailed Data Flow & Execution Lifecycles
 
 The Feature Flag Evaluator supports two distinct execution paths depending on performance and audit requirements:
 
@@ -492,7 +575,7 @@ Designed for process tracing, visual auditing, and manual user checkpoints.
 
 ---
 
-## 8. Testing & Architectural Integrity
+## 9. Testing & Architectural Integrity
 
 The system guarantees robust operations via its comprehensive, self-contained test suite containing **9 distinct unit and integration tests** distributed across these target segments:
 
